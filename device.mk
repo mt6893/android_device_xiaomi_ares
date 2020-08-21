@@ -196,7 +196,9 @@ PRODUCT_PACKAGES += \
 # Tethering
 PRODUCT_PACKAGES += \
     android.hardware.tetheroffload.config@1.0.vendor \
-    android.hardware.tetheroffload.control@1.0.vendor
+    android.hardware.tetheroffload.control@1.0.vendor \
+    TetheringConfigOverlayAres \
+    WifiOverlayAres
 
 # Secure element
 PRODUCT_PACKAGES += \
@@ -329,7 +331,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.1.vendor
 
-<<<<<<< HEAD
 # TinyXML
 PRODUCT_PACKAGES += \
     libtinyxml
