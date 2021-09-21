@@ -97,6 +97,10 @@ PRODUCT_BOOT_JARS += \
     mediatek-telephony-base \
     mediatek-telephony-common
 
+# Init
+PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/rootdir/etc/init.mt6893.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/init.mt6893.rc
+
 # Permissions
 PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/privapp-permissions-mediatek.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-mediatek.xml
