@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device name="Android">
+    <item name="none">0</item>
+    <item name="screen.on">83.09</item>
+    <item name="screen.full">429.31</item>
+    <item name="bluetooth.active">17.12</item>
+    <item name="bluetooth.on">1.01</item>
+    <item name="wifi.on">0.33</item>
+    <item name="wifi.active">287.87</item>
+    <item name="wifi.scan">28.76</item>
+    <item name="dsp.audio">20.36</item>
+    <item name="dsp.video">61.06</item>
+    <item name="camera.flashlight">112.28</item>
+    <item name="camera.avg">659.4</item>
+    <item name="gps.on">34.4</item>
+    <item name="radio.active">317.96</item>
+    <item name="radio.scanning">88.99</item>
+    <array name="radio.on">
+        <value>1.99</value>
+        <value>1.99</value>
+    </array>
+    <item name="modem.controller.idle">0</item>
+    <item name="modem.controller.rx">0</item>
+    <item name="modem.controller.tx">0</item>
+    <item name="modem.controller.voltage">0</item>
+    <array name="cpu.clusters.cores">
+        <value>4</value>
+        <value>3</value>
+        <value>1</value>
+    </array>
+    <array name="cpu.core_speeds.cluster0">
+        <value>500000</value>
+        <value>600000</value>
+        <value>675000</value>
+        <value>750000</value>
+        <value>850000</value>
+        <value>925000</value>
+        <value>1000000</value>
+        <value>1075000</value>
+        <value>1250000</value>
+        <value>1350000</value>
+        <value>1450000</value>
+        <value>1525000</value>
+        <value>1625000</value>
+        <value>1725000</value>
+        <value>1800000</value>
+        <value>2000000</value>
+    </array>
+    <array name="cpu.core_power.cluster0">
+        <value>43.49</value>
+        <value>44.86</value>
+        <value>45.21</value>
+        <value>45.31</value>
+        <value>48.59</value>
+        <value>49.05</value>
+        <value>52.06</value>
+        <value>52.69</value>
+        <value>56.42</value>
+        <value>59.26</value>
+        <value>61.87</value>
+        <value>66.58</value>
+        <value>67.68</value>
+        <value>70.12</value>
+        <value>74</value>
+        <value>81.07</value>
+    </array>
+    <array name="cpu.core_speeds.cluster1">
+        <value>437000</value>
+        <value>700000</value>
+        <value>902000</value>
+        <value>1046000</value>
+        <value>1162000</value>
+        <value>1335000</value>
+        <value>1451000</value>
+        <value>1537000</value>
+        <value>1624000</value>
+        <value>1740000</value>
+        <value>1855000</value>
+        <value>1985000</value>
+        <value>2200000</value>
+        <value>2354000</value>
+        <value>2507000</value>
+        <value>2600000</value>
+    </array>
+    <array name="cpu.core_power.cluster1">
+        <value>62.01</value>
+        <value>74.63</value>
+        <value>96.28</value>
+        <value>102.23</value>
+        <value>109.3</value>
+        <value>122.54</value>
+        <value>139.4</value>
+        <value>150.59</value>
+        <value>159.61</value>
+        <value>172.3</value>
+        <value>190.65</value>
+        <value>216.69</value>
+        <value>262</value>
+        <value>299.93</value>
+        <value>338.47</value>
+        <value>364.94</value>
+    </array>
+    <array name="cpu.core_speeds.cluster2">
+        <value>659000</value>
+        <value>921000</value>
+        <value>1108000</value>
+        <value>1258000</value>
+        <value>1370000</value>
+        <value>1482000</value>
+        <value>1632000</value>
+        <value>1820000</value>
+        <value>1998000</value>
+        <value>2141000</value>
+        <value>2284000</value>
+        <value>2463000</value>
+        <value>2600000</value>
+        <value>2713000</value>
+        <value>2892000</value>
+        <value>3000000</value>
+    </array>
+    <array name="cpu.core_power.cluster2">
+        <value>89.36</value>
+        <value>111.72</value>
+        <value>130.05</value>
+        <value>146.38</value>
+        <value>159.43</value>
+        <value>174.08</value>
+        <value>194.49</value>
+        <value>218.65</value>
+        <value>250.14</value>
+        <value>297.16</value>
+        <value>337.99</value>
+        <value>405.59</value>
+        <value>454.67</value>
+        <value>627.73</value>
+        <value>632.43</value>
+        <value>668.92</value>
+    </array>
+    <item name="cpu.awake">16.15</item>
+    <item name="cpu.idle">7.45</item>
+    <item name="battery.capacity">5065</item>
+    <item name="wifi.controller.idle">0</item>
+    <item name="wifi.controller.rx">0</item>
+    <item name="wifi.controller.tx">0</item>
+    <array name="wifi.controller.tx_levels" />
+    <item name="wifi.controller.voltage">0</item>
+    <array name="wifi.batchedscan">
+        <value>.0002</value>
+        <value>.002</value>
+        <value>.02</value>
+        <value>.2</value>
+        <value>2</value>
+    </array>
+</device>
