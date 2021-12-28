@@ -20,7 +20,7 @@
     <dimen name="status_bar_padding_top">7dp</dimen>
 
     <!-- The absolute side margins of quick settings -->
-    <dimen name="round_cornor_padding">7dp</dimen>
-    <dimen name="rounded_corner_content_padding">52px</dimen>
+    <dimen name="round_corner_padding">7dp</dimen>
+    <dimen name="rounded_corner_content_padding">40px</dimen>
 
 </resources>
