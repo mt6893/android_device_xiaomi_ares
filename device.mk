@@ -309,6 +309,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.1.vendor
 
+<<<<<<< HEAD
 # TinyXML
 PRODUCT_PACKAGES += \
     libtinyxml
@@ -326,6 +327,10 @@ PRODUCT_PACKAGES += \
 # NQ Client
 PRODUCT_PACKAGES += \
     libchrome.vendor
+
+# XiaomiParts
+PRODUCT_PACKAGES += \
+    XiaomiParts
 
 # Additional libs
 PRODUCT_PACKAGES += \
