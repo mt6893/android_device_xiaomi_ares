@@ -36,8 +36,6 @@ public class AmdSensor implements SensorEventListener {
     private static final boolean DEBUG = Utils.DEBUG;
     private static final String TAG = "AmdSensor";
 
-    private static final String AMD_SENSOR = "qti.sensor.amd";
-
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private Context mContext;
@@ -46,7 +44,7 @@ public class AmdSensor implements SensorEventListener {
     public AmdSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.getSensor(mSensorManager, AMD_SENSOR);
+        mSensor = mSensorManager.getDefaultSensor(33171036, true);
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -58,7 +56,7 @@ public class AmdSensor implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (DEBUG) Log.d(TAG, "Got sensor event: " + event.values[0]);
 
-        if (event.values[0] == 2.0f) {
+        if (event.values[0] == 1.0f) {
             DozeUtils.launchDozePulse(mContext);
         }
     }

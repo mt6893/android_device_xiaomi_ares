@@ -56,7 +56,7 @@ public class TiltSensor implements SensorEventListener {
     public TiltSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.getSensor(mSensorManager, TILT_SENSOR);
+        mSensor = mSensorManager.getDefaultSensor(33171036, true);
         mExecutorService = Executors.newSingleThreadExecutor();
         mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
@@ -77,7 +77,7 @@ public class TiltSensor implements SensorEventListener {
 
         mEntryTimestamp = SystemClock.elapsedRealtime();
 
-        if (event.values[0] == 0) {
+        if (event.values[0] == 1.0f) {
             mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
             mPowerManager.wakeUp(SystemClock.uptimeMillis(),
                     PowerManager.WAKE_REASON_GESTURE, TAG);
