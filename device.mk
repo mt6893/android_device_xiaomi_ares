@@ -61,6 +61,18 @@ PRODUCT_BUILD_SUPER_PARTITION := false
 TARGET_SCREEN_HEIGHT := 2400
 TARGET_SCREEN_WIDTH := 1080
 
+# Bootctrl
+PRODUCT_PACKAGES += \
+    bootctrl.default \
+    android.hardware.boot@1.2-impl \
+    android.hardware.boot@1.2-service \
+    android.hardware.boot@1.2.recovery
+
+# Fastbootd
+PRODUCT_PACKAGES += \
+    fastbootd \
+    android.hardware.fastboot@1.0-impl-mock
+
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(DEVICE_PATH)
