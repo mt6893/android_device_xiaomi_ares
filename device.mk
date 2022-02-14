@@ -27,6 +27,9 @@ $(call inherit-product, vendor/xiaomi/ares/ares-vendor.mk)
 PRODUCT_EXTRA_VNDK_VERSIONS := 30
 PRODUCT_SHIPPING_API_LEVEL := 30
 
+# Properties
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure.recovery=0
+
 # A/B
 ENABLE_VIRTUAL_AB := true
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
