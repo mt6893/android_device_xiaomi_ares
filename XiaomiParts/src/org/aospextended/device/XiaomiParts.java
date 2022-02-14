@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,7 @@ import android.widget.Toast;
 
 import org.aospextended.device.R;
 import org.aospextended.device.util.Utils;
+import org.aospextended.device.triggers.TriggerService;
 
 public class XiaomiParts extends PreferenceFragment implements
         Preference.OnPreferenceChangeListener {
@@ -72,6 +74,8 @@ public class XiaomiParts extends PreferenceFragment implements
     private Preference mGesturesPref;
     private SwitchPreference mOTG;
     private VibratorStrengthPreference mVibratorStrength;
+
+    private Preference mTriggers;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -104,10 +108,19 @@ public class XiaomiParts extends PreferenceFragment implements
             }
         });
 
+        PreferenceCategory misc = (PreferenceCategory) getPreferenceScreen()
+                 .findPreference("misc_category");
+
         mOTG = (SwitchPreference) findPreference(PREF_OTG);
         mOTG.setChecked(mPrefs.getBoolean(PREF_OTG, false));
         mOTG.setOnPreferenceChangeListener(this);
 
+        if (!Utils.fileExists(OTG_PATH)) {
+            misc.removePreference(mOTG);
+        }
+
+        mTriggers = (Preference) findPreference("triggers");
+//        mTriggers.setOnPreferenceClickListener(this);
 /*        PreferenceCategory vib_strength = (PreferenceCategory) getPreferenceScreen()
                  .findPreference("vib_strength_category");
         mVibratorStrength = (VibratorStrengthPreference) findPreference(VibratorStrengthPreference.KEY_VIBSTRENGTH);
@@ -119,6 +132,10 @@ public class XiaomiParts extends PreferenceFragment implements
 
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
+        if (preference == mTriggers) {
+            getActivity().startService(new Intent(getActivity(), TriggerService.class));
+            return true;
+        }
         return super.onPreferenceTreeClick(preference);
     }
 
@@ -142,6 +159,7 @@ public class XiaomiParts extends PreferenceFragment implements
             enableOTG((Boolean) newValue);
             return true;
         }
+
         return true;
     }
 

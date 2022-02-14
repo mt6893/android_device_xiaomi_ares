@@ -23,13 +23,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="otg_category"
-        android:title="@string/otg">
+        android:key="misc_category"
+        android:title="Misc">
 
         <SwitchPreference
             android:key="otg"
             android:summary="@string/otg_summary"
             android:title="@string/otg_title" />
+
+        <Preference
+            android:key="triggers"
+            android:title="Enable triggers view"
+            android:summary="You can also enable this view by enabling both triggers within 10 seconds. Long press save button to reset values" />
     </PreferenceCategory>
 <!--
     <PreferenceCategory

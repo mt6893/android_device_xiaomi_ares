@@ -20,12 +20,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.provider.Settings;
 import android.util.Slog;
 
 import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.BufferedReader;
@@ -60,14 +62,13 @@ public class Utils {
         return context;
     }
 
-
-    public static int getIntSystem(Context context, ContentResolver cr, String name, int def) {
-        int ret = getInt(context, name, def);
+    public static int getIntSystem(Context context, String name, int def) {
+        int ret = Settings.System.getInt(context.getContentResolver(), name, def);
         return ret;
     }
 
-    public static boolean putIntSystem(Context context, ContentResolver cr, String name, int value) {
-        boolean ret = putInt(context, name, value);
+    public static boolean putIntSystem(Context context, String name, int value) {
+        boolean ret = Settings.System.putInt(context.getContentResolver(), name, value);
         return ret;
     }
 
@@ -192,6 +193,25 @@ public class Utils {
         }
 
         return line;
+    }
+
+    public static boolean getTriggerEnabled(int position) {
+        File file = new File("/dev/gamekey");
+        if (file.exists()) {
+            file.length();
+            byte[] b3 = new byte[4];
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                fileInputStream.read(b3);
+                fileInputStream.close();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (DEBUG) Slog.d(TAG, "triggerleft=" + b3[0] + ", triggerright=" + b3[1]);
+            return b3[position] == 1;
+        }
+        return false;
     }
 
     /**

@@ -16,42 +16,53 @@
 
 package org.aospextended.device;
 
-import android.database.ContentObserver;
+import static android.view.Display.DEFAULT_DISPLAY;
+import static android.view.Display.INVALID_DISPLAY;
+
 import android.content.BroadcastReceiver;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.ComponentName;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.ContentObserver;
+import android.hardware.input.InputManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.os.SystemProperties;
+import android.os.UserHandle;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.Global;
+import android.text.TextUtils;
 import android.util.Slog;
+import android.view.InputDevice;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.WindowManagerGlobal;
-import android.service.notification.ZenModeConfig;
-import org.aospextended.device.gestures.TouchGestures;
-import android.os.UserHandle;
+import android.view.ViewConfiguration;
+
 import com.android.internal.os.DeviceKeyHandler;
 import com.android.internal.util.ArrayUtils;
 import org.aospextended.device.util.Action;
 import org.aospextended.device.util.Action;
 import org.aospextended.device.util.Utils;
 import org.aospextended.device.doze.DozeUtils;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.text.TextUtils;
+import org.aospextended.device.gestures.TouchGestures;
+import org.aospextended.device.triggers.TriggerService;
 
 public class KeyHandler implements DeviceKeyHandler {
 
@@ -61,11 +72,11 @@ public class KeyHandler implements DeviceKeyHandler {
     private static final int GESTURE_REQUEST = 1;
     private static final int GESTURE_WAKELOCK_DURATION = 2000;
 
-    private static final int GESTURE_DOUBLE_TAP_SCANCODE = 248;
+    private static final int GESTURE_DOUBLE_TAP_SCANCODE = 250;
     private static final int GESTURE_W_SCANCODE = 246;
     private static final int GESTURE_M_SCANCODE = 247;
     private static final int GESTURE_CIRCLE_SCANCODE = 249;
-    private static final int GESTURE_TWO_SWIPE_SCANCODE = 250;
+    private static final int GESTURE_TWO_SWIPE_SCANCODE = 248;
     private static final int GESTURE_UP_ARROW_SCANCODE = 252;
     private static final int GESTURE_DOWN_ARROW_SCANCODE = 251;
     private static final int GESTURE_LEFT_ARROW_SCANCODE = 254;
@@ -82,6 +93,14 @@ public class KeyHandler implements DeviceKeyHandler {
 
     private Vibrator mVibrator;
 
+    private int mTriggerAction;
+
+    long mPrevEventTime;
+    boolean mLeft;
+    boolean mRight;
+
+    private final CustomSettingsObserver mCustomSettingsObserver;
+
     public KeyHandler(Context context) {
         mContext = context;
         mEventHandler = new EventHandler();
@@ -89,6 +108,38 @@ public class KeyHandler implements DeviceKeyHandler {
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         mAppContext = Utils.getAppContext(mContext);
+        mCustomSettingsObserver = new CustomSettingsObserver(new Handler(Looper.getMainLooper()));
+        mCustomSettingsObserver.observe();
+    }
+
+    private class CustomSettingsObserver extends ContentObserver {
+        CustomSettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("triggerleft"),
+                    false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("triggerright"),
+                    false, this, UserHandle.USER_ALL);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            boolean left = uri.equals(Settings.System.getUriFor("triggerleft"));
+            boolean open = Utils.getIntSystem(mContext, left ? "triggerleft" : "triggerright", -1) == 1;
+            long now = SystemClock.uptimeMillis();
+            long time = now - mPrevEventTime;
+            if (DEBUG) Slog.d(TAG, "new intent: mLeft=" + mLeft + ", mRight=" + mRight + ", left=" + left + ", open=" + open + ", now=" + now + ", time=" + time + ", (mLeft && !left && open)=" + (mLeft && !left && open) + ", (mRight && left && open)=" + (mRight && left && open));
+            if (time < 10000 && ((mLeft && !left && open) || (mRight && left && open))) {
+                if (DEBUG) Slog.d(TAG, "starting service");
+                mAppContext.startService(new Intent(mAppContext, TriggerService.class));
+            }
+            mPrevEventTime = now;
+            mLeft = left && open;
+            mRight = !left && open;
+        }
+
     }
 
     private class EventHandler extends Handler {
@@ -196,6 +247,12 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     public KeyEvent handleKeyEvent(KeyEvent event) {
+        if (DEBUG) Slog.d(TAG, "Got KeyEvent: " + event);
+
+        if (event.getDevice().getProductId() == 1576) {
+            return handleTriggerEvent(event);
+        }
+
         if (event.getAction() != KeyEvent.ACTION_UP) {
             return event;
         }
@@ -212,5 +269,14 @@ public class KeyHandler implements DeviceKeyHandler {
         Message msg = mEventHandler.obtainMessage(GESTURE_REQUEST);
         msg.obj = keyEvent;
         return msg;
+    }
+
+    public KeyEvent handleTriggerEvent(KeyEvent event) {
+        boolean down = event.getAction() == MotionEvent.ACTION_DOWN;
+        Utils.writeValue(event.getKeyCode() == 131 ?
+                "/proc/touchpanel/left_trigger_enable" :
+                "/proc/touchpanel/right_trigger_enable" , down ? "1" : "0");
+
+        return event;
     }
 }

@@ -217,9 +217,9 @@ public class TouchGestures extends PreferenceFragment implements
         if (!isSupported()) {
             getPreferenceScreen().removePreference(haptic);
         }
-        if (!isSupported(GESTURE_PATH)) {
+//        if (!isSupported(GESTURE_PATH)) {
             getPreferenceScreen().removePreference(gestures);
-        }
+//        }
 
         return prefs;
     }

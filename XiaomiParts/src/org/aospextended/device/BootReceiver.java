@@ -32,6 +32,7 @@ import org.aospextended.device.gestures.TouchGestures;
 import org.aospextended.device.util.Utils;
 import org.aospextended.device.doze.DozeUtils;
 import org.aospextended.device.vibration.VibratorStrengthPreference;
+import org.aospextended.device.triggers.TriggerService;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -49,6 +50,7 @@ public class BootReceiver extends BroadcastReceiver {
         }
         DozeUtils.checkDozeService(context);
 //        VibratorStrengthPreference.restore(context);
+        TriggerService.onBoot(context);
     }
 
     private void enableComponent(Context context, String component) {
