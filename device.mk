@@ -22,6 +22,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 # Enable updating of APEXes
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
+$(call inherit-product, vendor/xiaomi/ares/ares-vendor.mk)
+
 PRODUCT_SHIPPING_API_LEVEL := 30
 
 # A/B
