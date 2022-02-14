@@ -99,7 +99,9 @@ PRODUCT_BOOT_JARS += \
 
 # Init
 PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/rootdir/etc/init.mt6893.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/init.mt6893.rc
+    $(DEVICE_PATH)/rootdir/etc/init.mt6893.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/init.mt6893.rc \
+    $(DEVICE_PATH)/rootdir/etc/fstab.mt6893:$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/30/etc/fstab.mt6893 \
+    $(DEVICE_PATH)/rootdir/etc/fstab.mt6893:$(TARGET_COPY_OUT_RECOVERY)/root/first_stage_ramdisk/fstab.mt6893
 
 # Permissions
 PRODUCT_COPY_FILES += \
