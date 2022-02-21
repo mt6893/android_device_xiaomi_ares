@@ -2963,3 +2963,16 @@ vendor/etc/factory.ini
 -odm/etc/vintf/manifest_tsts.xml
 -odm/etc/vintf/manifest_ss.xml
 -odm/etc/vintf/manifest_qsqs.xml
+
+# NFC - from cn
+vendor/bin/STFlashTool|5d9b59ce4b2bfd1042b2fc154f7ab23ef4381ae6
+vendor/bin/nfcstackp-vendor|d4d823fa18451cb65618c130267652d2c609b088
+vendor/bin/pnscr|c2b4caa00331661477136318ffdff0db8bcb535e
+vendor/bin/st_factorytests-vendor|31e1f0a65c77d98610245a420651357d50ee9c8b
+vendor/etc/init/hw/init.stnfc.rc|46309c5c990bab63ce92e73eb55a633acc7d5ab0
+vendor/etc/libnfc-hal-st.conf|b23200cd0e8c7f45a92491d91c533f41aa997d84
+vendor/etc/libnfc-nci.conf|2ae4d77d0f456e4fad8b51a911c951dc7e88cd16
+vendor/etc/st21nfc_conf.txt|cb75e170a2cd06db1074b4a193f84811c5b5c03c
+vendor/firmware/st21nfc_fw.bin|f3415b51288b7114d856bdb671c218bba21c31c2
+vendor/firmware/st21nfc_fw7.bin|32da0756c2bf6bc699bf5e9b0216d7c7fd86943a
+vendor/lib64/libstfactory-vendor.so|6b23459eae21b57c25d481f7c9627efcf50967b6
