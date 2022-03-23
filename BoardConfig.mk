@@ -152,8 +152,5 @@ TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USES_MKE2FS := true
 TARGET_NO_RECOVERY := true
 
-# Treble
-BOARD_VNDK_VERSION := current
-
 # Security patch level
 VENDOR_SECURITY_PATCH := 2021-02-05
