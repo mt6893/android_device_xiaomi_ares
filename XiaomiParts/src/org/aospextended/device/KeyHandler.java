@@ -279,4 +279,43 @@ public class KeyHandler implements DeviceKeyHandler {
 
         return event;
     }
+
+    private void injectMotionEvent(int id, int inputSource, int action, long downTime, long when,
+            float x, float y, float pressure, int displayId) {
+        final int pointerCount = id;
+        MotionEvent.PointerProperties[] pointerProperties =
+                new MotionEvent.PointerProperties[pointerCount];
+        MotionEvent.PointerCoords[] pointerCoords = new MotionEvent.PointerCoords[pointerCount];
+        for (int i = 0; i < pointerCount; i++) {
+            pointerProperties[i] = new MotionEvent.PointerProperties();
+            pointerProperties[i].id = i;
+            pointerProperties[i].toolType = MotionEvent.TOOL_TYPE_FINGER;
+            pointerCoords[i] = new MotionEvent.PointerCoords();
+            pointerCoords[i].x = x;
+            pointerCoords[i].y = y;
+            pointerCoords[i].pressure = pressure;
+            pointerCoords[i].size = 1.0f;
+        }
+        if (displayId == INVALID_DISPLAY
+                && (inputSource & InputDevice.SOURCE_CLASS_POINTER) != 0) {
+            displayId = DEFAULT_DISPLAY;
+        }
+        MotionEvent event = MotionEvent.obtain(downTime, when, action, pointerCount,
+                pointerProperties, pointerCoords, 0, 0,
+                1.0f, 1.0f, getInputDeviceId(inputSource),
+                0, inputSource, displayId, 0);
+        InputManager.getInstance().injectInputEvent(event,
+                InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+    }
+
+    private int getInputDeviceId(int inputSource) {
+        int[] devIds = InputDevice.getDeviceIds();
+        for (int devId : devIds) {
+            InputDevice inputDev = InputDevice.getDevice(devId);
+            if (inputDev.supportsSource(inputSource)) {
+                return devId;
+            }
+        }
+        return 0;
+    }
 }
