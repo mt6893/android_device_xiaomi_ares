@@ -63,6 +63,10 @@ TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 # DRM
 TARGET_ENABLE_MEDIADRM_64 := true
 
+# Init
+TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):libinit_ares
+TARGET_RECOVERY_DEVICE_MODULES := libinit_ares
+
 # Kernel
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
