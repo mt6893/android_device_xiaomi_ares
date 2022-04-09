@@ -4,6 +4,9 @@ on init
 on property:sys.boot_completed=1
     chmod 0640 /sys/fs/selinux/enforce
     chmod 0440 /sys/fs/selinux/policy
+    write /sys/devices/system/cpu/cpufreq/policy0/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpufreq/policy4/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpufreq/policy7/scaling_governor "schedutil"
 
 service nfc_hal_service /vendor/bin/hw/android.hardware.nfc@1.2-service.st
     override
