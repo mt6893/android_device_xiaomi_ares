@@ -23,4 +23,9 @@
     <dimen name="round_corner_padding">7dp</dimen>
     <dimen name="rounded_corner_content_padding">40px</dimen>
 
+    <!-- Set fingerprint/power button vertical position -->
+    <dimen name="physical_fingerprint_sensor_center_screen_location_x">1040px</dimen>
+    <dimen name="physical_power_button_center_screen_location_y">1050px</dimen>
+    <dimen name="physical_fingerprint_sensor_center_screen_location_y">1050px</dimen>
+
 </resources>
