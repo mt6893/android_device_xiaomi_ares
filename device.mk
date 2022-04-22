@@ -24,7 +24,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
 $(call inherit-product, vendor/xiaomi/ares/ares-vendor.mk)
 
-PRODUCT_EXTRA_VNDK_VERSIONS := 30
 PRODUCT_SHIPPING_API_LEVEL := 30
 
 # A/B
