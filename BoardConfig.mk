@@ -138,6 +138,7 @@ BOARD_SUPER_PARTITION_GROUPS := main
 
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/props/system.prop
+TARGET_VENDOR_PROP += $(DEVICE_PATH)/configs/props/vendor.prop
 TARGET_PRODUCT_PROP += $(DEVICE_PATH)/configs/props/product.prop
 
 # Recovery
