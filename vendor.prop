@@ -275,3 +275,4 @@ debug.mediatek.high_frame_rate_sf_set_big_core_fps_threshold=119
 persist.sys.periodic.enable=true
 persist.sys.periodic.fgtrim=true
 persist.sys.periodic.startprocess.enable=true
+

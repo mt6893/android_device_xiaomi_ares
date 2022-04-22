@@ -101,7 +101,7 @@ BOARD_ROOT_EXTRA_FOLDERS += metadata
 
 # Nfc
 ODM_MANIFEST_SKUS += ares
-ODM_MANIFEST_ARES_FILES := $(DEVICE_PATH)/configs/manifest_ares.xml
+ODM_MANIFEST_ARES_FILES := $(DEVICE_PATH)/manifest_ares.xml
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072
@@ -146,9 +146,9 @@ BOARD_SUPER_PARTITION_ERROR_LIMIT := 9126805504
 BOARD_SUPER_PARTITION_GROUPS := main
 
 # Properties
-TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/props/system.prop
-TARGET_VENDOR_PROP += $(DEVICE_PATH)/configs/props/vendor.prop
-TARGET_PRODUCT_PROP += $(DEVICE_PATH)/configs/props/product.prop
+TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
+TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
+TARGET_PRODUCT_PROP += $(DEVICE_PATH)/product.prop
 
 # Recovery
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
