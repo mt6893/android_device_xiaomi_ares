@@ -23,4 +23,5 @@
     <!-- Doze: does this device support STATE_DOZE?  -->
     <bool name="doze_display_state_supported">true</bool>
 
+    <string name="keyguard_plugged_in_oem_fast_charging">SonicCharge 3.0</string>
 </resources>
