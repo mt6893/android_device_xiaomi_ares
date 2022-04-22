@@ -2976,3 +2976,11 @@ vendor/etc/st21nfc_conf.txt|cb75e170a2cd06db1074b4a193f84811c5b5c03c
 vendor/firmware/st21nfc_fw.bin|f3415b51288b7114d856bdb671c218bba21c31c2
 vendor/firmware/st21nfc_fw7.bin|32da0756c2bf6bc699bf5e9b0216d7c7fd86943a
 vendor/lib64/libstfactory-vendor.so|6b23459eae21b57c25d481f7c9627efcf50967b6
+
+# MTK SE
+vendor/bin/hw/android.hardware.secure_element@1.2-service-mediatek
+vendor/etc/init/android.hardware.secure_element@1.2-service-mediatek.rc
+
+# MTK OMX
+vendor/bin/hw/android.hardware.media.omx@1.0-service
+vendor/etc/init/android.hardware.media.omx@1.0-service.rc
