@@ -79,13 +79,13 @@ void vendor_load_properties()
 {
     std::string sku = android::base::GetProperty("ro.boot.product.hardware.sku", "");
     bool isAres = !strcmp(sku.c_str(), "ares");
-
+    isAres = true;
     LOG(INFO) << "libinit_ares : sku=" << sku;
 
     property_override("ro.device", sku);
     property_override("ro.product.board", sku);
     set_ro_build_prop("device", sku);
-    set_ro_build_prop("model", isAres ? "Redmi K40 Gaming" : "POCO F3 GT");
+    set_ro_build_prop("model", isAres ? "M2012K10C" : "M2104K10I");
     set_ro_build_prop("name", sku);
     set_ro_build_prop("brand", isAres ? "Redmi" : "POCO");
     set_ro_build_prop("marketname", isAres ? "Redmi K40 Gaming" : "POCO F3 GT");
