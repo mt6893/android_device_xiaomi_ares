@@ -1,0 +1,24 @@
+cc_library_shared {
+    name: "libshim_vtservice",
+    srcs: ["libshim_vtservice.cpp"],
+    shared_libs: [
+        "libaudioclient",
+        "libgui",
+        "libstagefright",
+        "libutils",
+    ],
+    header_libs: [
+        "libaudioclient_headers",
+        "libmedia_headers",
+        "libmediametrics_headers",
+    ],
+}
+
+cc_library_shared {
+    name: "libshim_showlogo",
+    srcs: ["libshim_showlogo.cpp"],
+    shared_libs: [
+        "libgui",
+        "libutils",
+    ],
+}
