@@ -101,6 +101,9 @@ ro.sys.usb.storage.type=mtp
 # USB BICR function
 ro.sys.usb.bicr=no
 
+# Charger
+ro.charger.enable_suspend=true
+
 # USB Charge only function
 ro.sys.usb.charging.only=yes
 
