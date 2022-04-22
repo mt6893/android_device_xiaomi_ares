@@ -159,3 +159,6 @@ ENABLE_VENDOR_RIL_SERVICE := true
 
 # Security patch level
 VENDOR_SECURITY_PATCH := 2021-02-05
+
+# Sepolicy
+BOARD_PLAT_PRIVATE_SEPOLICY_DIR := $(DEVICE_PATH)/sepolicy/private
