@@ -41,6 +41,9 @@ function blob_fixup {
         vendor/lib*/hw/audio.primary.mt6893.so)
             "$PATCHELF" --replace-needed "libmedia_helper.so" "libmedia_helper-v30.so" "$2"
             ;;
+	vendor/etc/init/init.batterysecret.rc | vendor/etc/init/mi_ic.rc | vendor/etc/init/hw/init.mi_thermald.rc | vendor/etc/init/init.charge_logger.rc | vendor/etc/init/mi_ric.rc)
+            sed -i '/seclabel/d' "${2}"
+            ;;
     esac
 }
 
