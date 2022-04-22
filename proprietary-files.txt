@@ -598,7 +598,6 @@ system_ext/lib64/vendor.mediatek.hardware.vpu@1.0.so
 system_ext/lib64/vendor.xiaomi.hardware.dtool@1.0.so
 system_ext/lib64/vendor.xiaomi.hardware.fx.tunnel@1.0.so
 
-# vendor blobs
 vendor/lib/hw/vendor.mediatek.hardware.nvram@1.1-impl.so
 vendor/lib/hw/sensors.touch.detect.so
 vendor/lib/hw/vendor.mediatek.hardware.mtkcodecservice@1.1-impl.so
@@ -1109,11 +1108,6 @@ vendor/mitee/ta/377ee4e8-af0e-474f-a9d636a9268fe85c.ta
 vendor/mitee/ta/3d08821c-33a6-11e6-a1fa089e01c83aa2.ta
 vendor/mitee/ta/e5140b33-76fa-4c63-ab18062caab2fb5c.ta
 vendor/mitee/ta/14b0aad8-c011-4a3f-b66aca8d0e66f273.ta
-vendor/res/images/lcd_test_01.png
-vendor/res/images/lcd_test_00.png
-vendor/res/images/lcd_test_02.png
-vendor/res/sound/ringtone.wav
-vendor/res/sound/testpattern1.wav
 vendor/thh/ta/09010000000000000000000000000000.ta
 vendor/thh/ta/e5140b3376fa4c63ab18062caab2fb5c.ta
 vendor/thh/ta/7778c03fc30c4dd0a319ea29643d4d4b.ta
@@ -1170,7 +1164,6 @@ vendor/bin/hw/android.hardware.graphics.allocator@4.0-service-mediatek
 vendor/bin/hw/vendor.mediatek.hardware.keyinstall@1.0-service
 vendor/bin/hw/vtservice_hidl
 vendor/bin/hw/vendor.mediatek.hardware.nvram@1.1-service
-vendor/bin/hw/android.hardware.drm@1.3-service.clearkey
 vendor/bin/hw/android.hardware.keymaster@4.0-service.beanpod
 vendor/bin/hw/android.hardware.drm@1.3-service.widevine
 vendor/bin/hw/vendor.mediatek.hardware.vpu@1.0-service
@@ -2324,7 +2317,6 @@ vendor/etc/audio_policy.conf
 vendor/etc/ecc_list_OP17.xml
 -vendor/etc/vintf/manifest/manifest_android.hardware.drm@1.3-service.widevine.xml
 -vendor/etc/vintf/manifest/vendor.xiaomi.hardware.misys@1.0.xml
--vendor/etc/vintf/manifest/manifest_android.hardware.drm@1.3-service.clearkey.xml
 -vendor/etc/vintf/manifest/vendor.xiaomi.hardware.vibratorfeature@1.0-service.xml
 -vendor/etc/vintf/manifest/manifest_vendor.dolby.hardware.dms.xml
 -vendor/etc/vintf/manifest/vendor.xiaomi.hardware.micharge@1.0.xml
@@ -2351,7 +2343,6 @@ vendor/etc/special_pws_channel.xml
 vendor/etc/usb_audio_policy_configuration.xml
 vendor/etc/throttle.sh
 vendor/etc/MNL_Config.xml
-vendor/etc/128_Sepia.png
 vendor/etc/thermal-video.conf
 vendor/etc/fstab.emmc
 vendor/etc/thermal-map-india.conf
@@ -2508,11 +2499,9 @@ vendor/etc/mdota/MTK_OPOTA_SBPID_222.mcfopota
 vendor/etc/mdota/MTK_OPOTA_SBPID_16.mcfopota
 vendor/etc/mdota/MTK_OPOTA_SBPID_123.mcfopota
 vendor/etc/mdota/MTK_OPOTA_SBPID_139.mcfopota
-vendor/etc/spk.wav
 vendor/etc/smartpa_param/rt_device.xml
 vendor/etc/smartpa_param/rt5509_param
 vendor/etc/bluetooth_audio_policy_configuration_ble.xml
-vendor/etc/113_BlackIce.png
 vendor/etc/camera/LDC_packdata_xiaomi_UW.dat
 vendor/etc/camera/com.xiaomi.dcal.wu.golden
 vendor/etc/camera/video_bokeh_apu_front_20210413.bin
@@ -2547,10 +2536,8 @@ vendor/etc/FV-SAM-MTK2.dat
 vendor/etc/sla/slad.conf
 vendor/etc/device_features/aresin.xml
 vendor/etc/device_features/ares.xml
-vendor/etc/109_Rome.png
 vendor/etc/thermal-india-mgame.conf
 vendor/etc/smsdbvisitor.xml
-vendor/etc/ultrasound.wav
 vendor/etc/dsi_k10_42_02_0a_dsc_cmd_mi.xml
 vendor/etc/public.libraries.txt
 vendor/etc/powercontable.xml
@@ -2559,44 +2546,33 @@ vendor/etc/virtual-spn-conf-by-efpnn.xml
 vendor/etc/media_codecs_performance.xml
 vendor/etc/misound_res_headphone.bin
 vendor/etc/audio_policy_configuration_bluetooth_legacy_hal.xml
-vendor/etc/122_Thriller.png
-vendor/etc/rcv_pink.wav
-vendor/etc/123_TealOrange.png
 vendor/etc/thermal-india-camera.conf
 vendor/etc/thermal-normal.conf
 vendor/etc/ecc_list_OP02.xml
 vendor/etc/a2dp_in_audio_policy_configuration.xml
-vendor/etc/103_Fantasy.png
 vendor/etc/seccomp_policy/mediaswcodec.policy
 vendor/etc/seccomp_policy/mediacodec.policy
 vendor/etc/seccomp_policy/mediaextractor.policy
 vendor/etc/thermal-phone.conf
 vendor/etc/media_profiles_V1_0.xml
 vendor/etc/ecc_list.xml
-vendor/etc/RES1K.wav
 vendor/etc/cust_color.xml
 vendor/etc/audio_em.xml
 vendor/etc/usb_audio_accessory_only_policy_configuration.xml
 vendor/etc/thermal-mgame.conf
-vendor/etc/127_Creamy.png
 vendor/etc/ecc_list_OP20.xml
 vendor/etc/vendor-apns-conf.xml
-vendor/etc/rcv_seal.wav
 vendor/etc/audio_policy_configuration.xml
 vendor/etc/aee-config
 vendor/etc/nhw
 vendor/etc/cit_param_config.json
 vendor/etc/bluetooth_audio_policy_configuration.xml
-vendor/etc/stereo.wav
 vendor/etc/ecc_list_OP01.xml
 vendor/etc/media_codecs.xml
 vendor/etc/armnn_app.config
 vendor/etc/thermal-india-video.conf
 vendor/etc/virtual-spn-conf-by-efgid1.xml
 vendor/etc/audio_policy_configuration_a2dp_offload_disabled_ble.xml
-vendor/etc/124_JapaneseStyle.png
-vendor/etc/102_SummerDay.png
-vendor/etc/126_Fantasy2.png
 vendor/etc/powerscntbl.xml
 vendor/etc/screen_light.xml
 vendor/etc/thermal-india-class0.conf
@@ -2605,7 +2581,6 @@ vendor/etc/mpe.conf
 vendor/etc/misound_res_spk.bin
 vendor/etc/virtual-spn-conf-by-efspn.xml
 vendor/etc/virtual-spn-conf-by-imsi.xml
-vendor/etc/top_spk.wav
 vendor/etc/default_volume_tables.xml
 vendor/etc/gnss/carrier/agps_profiles_conf2_carrier_Test_SIM1.xml
 vendor/etc/gnss/carrier/agps_profiles_conf2_carrier_SoftBank.xml
@@ -2624,11 +2599,9 @@ vendor/etc/gnss/carrier/agps_profiles_conf2_carrier_SK_Telecom.xml
 vendor/etc/gnss/carrier/agps_profiles_conf2_carrier_T-Mobile_US.xml
 vendor/etc/gnss/agps_profiles_conf2.xml
 vendor/etc/ecc_list_OP18.xml
-vendor/etc/121_Bleach.png
 vendor/etc/thermal-camera.conf
 vendor/etc/fstb.cfg
 vendor/etc/spn-conf-op09.xml
-vendor/etc/110_BlackGold.png
 vendor/etc/aurisys_param/FV-SAM-MTKXX.dat
 vendor/etc/aurisys_param/Speech_AudioParam.xml
 vendor/etc/thermal-region-map.conf
@@ -2638,14 +2611,10 @@ vendor/etc/.tp/.thermal_policy_08
 vendor/etc/.tp/thermal.off.conf
 vendor/etc/ecc_list_OP09.xml
 vendor/etc/thermal-india-4k.conf
-vendor/etc/bottom_spk.wav
 vendor/etc/init.panel_info.sh
 vendor/etc/device_sar_config.xml
-vendor/etc/105_WindSing.png
-vendor/etc/107_Central.png
 vendor/etc/bluetooth_offload_audio_policy_configuration.xml
 vendor/etc/meow.cfg
-vendor/etc/104_Meet.png
 vendor/etc/dolby/dax-default.xml
 vendor/etc/misound_res.bin
 vendor/etc/audio_param/RingbackVol_ParamUnitDesc.xml
@@ -2752,18 +2721,13 @@ vendor/etc/audio_param/VoIPDMNR_AudioParam.xml
 vendor/etc/audio_param/SoundEnhancement_AudioParam.xml
 vendor/etc/thermal-india-tgame.conf
 vendor/etc/thermal-4k.conf
-vendor/etc/rcv.wav
 vendor/etc/audio_effects.xml
 
 vendor/etc/fstab.mt6893
-vendor/etc/112_CyberPunk.png
 vendor/etc/thermal-nolimits.conf
 vendor/etc/mtk_omx_core.cfg
 vendor/etc/thermald-devices.conf
-vendor/etc/top_spk_seal.wav
-vendor/etc/bottom_spk_hp.wav
 vendor/etc/aurisys_config_hifi3.xml
-vendor/etc/106_Lost.png
 vendor/etc/thermal-india-normal.conf
 vendor/etc/ecc_list_OP12.xml
 vendor/etc/audio_policy_configuration_a2dp_offload_disabled.xml
@@ -2771,12 +2735,10 @@ vendor/etc/thermal-map.conf
 vendor/etc/audio_policy_configuration_ble.xml
 vendor/etc/r_submix_audio_policy_configuration.xml
 vendor/etc/audio_device.xml
-vendor/etc/125_Latin.png
 vendor/etc/bluetooth_offload_audio_policy_configuration_ble.xml
 vendor/etc/media_codecs_google_audio.xml
 vendor/etc/thermal-tgame.conf
 vendor/etc/task_profiles.json
-vendor/etc/spk_hp.wav
 vendor/etc/media_codecs_c2.xml
 vendor/etc/a2dp_audio_policy_configuration.xml
 vendor/etc/ecc_list_preference.xml
@@ -2812,7 +2774,6 @@ vendor/etc/init/init.conninfra.rc
 vendor/etc/init/init.thermal_manager.rc
 vendor/etc/init/vendor.qti.sla.service@1.0-service.rc
 vendor/etc/init/vendor.mediatek.hardware.vpu@1.0-service.rc
-vendor/etc/init/android.hardware.drm@1.3-service.clearkey.rc
 vendor/etc/init/fuelgauged_init.rc
 vendor/etc/init/mtk_agpsd_p.rc
 vendor/etc/init/init.cccimdinit.rc
@@ -2909,13 +2870,11 @@ vendor/etc/partition_permission.sh
 vendor/etc/gbe.cfg
 vendor/etc/apdb/APDB_MT6885_S01__W2105_ENUM
 vendor/etc/apdb/APDB_MT6885_S01__W2105
-vendor/etc/111_GreenOrange.png
 vendor/etc/sensors/hals.conf
 vendor/etc/xgf.cfg
 vendor/etc/media_codecs_mediatek_audio.xml
 vendor/etc/audio_policy_volumes.xml
 vendor/etc/media_codecs_system_default.xml
-vendor/etc/108_NorthernEurope.png
 vendor/etc/permissions/android.hardware.sensor.light.xml
 vendor/etc/permissions/android.hardware.wifi.passpoint.xml
 vendor/etc/permissions/android.hardware.audio.low_latency.xml
@@ -2956,13 +2915,23 @@ vendor/etc/permissions/android.hardware.camera.xml
 vendor/etc/permissions/com.mediatek.hardware.vow.xml
 vendor/etc/permissions/android.hardware.wifi.xml
 vendor/etc/permissions/android.hardware.sensor.proximity.xml
-vendor/etc/cs35l41_cal.wav
 vendor/etc/factory.ini
 
 -odm/etc/vintf/manifest_dsds.xml
 -odm/etc/vintf/manifest_tsts.xml
 -odm/etc/vintf/manifest_ss.xml
 -odm/etc/vintf/manifest_qsqs.xml
+
+# Keymaster
+vendor/lib64/libkeymaster4support.so
+vendor/lib64/libkeystore-wifi-hidl.so
+vendor/lib64/libkeymaster_messages.so
+vendor/lib64/libkeymaster4.so
+vendor/lib64/libkeystore-engine-wifi-hidl.so
+vendor/lib64/libkeymaster_portable.so
+vendor/lib64/libpuresoftkeymasterdevice.so
+
+vendor/lib64/libwifi-hal.so
 
 # NFC - from cn
 vendor/bin/STFlashTool|5d9b59ce4b2bfd1042b2fc154f7ab23ef4381ae6
