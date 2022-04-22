@@ -167,6 +167,10 @@ PRODUCT_PACKAGES += \
     libshim_vtservice \
     libshim_showlogo
 
+# Lights
+PRODUCT_PACKAGES += \
+    android.hardware.lights-service.xiaomi_mt6893
+
 # Thermal
 PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-impl \
