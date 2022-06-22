@@ -42,4 +42,18 @@
         <item>null</item>
     </string-array>
 
+    <string-array name="trigger_sound_type_entries">
+       <item>Sword</item>
+       <item>Bullet</item>
+       <item>Future</item>
+       <item>Engine</item>
+    </string-array>
+
+    <string-array name="trigger_sound_type_values" translatable="false">
+       <item>classic</item>
+       <item>bullet</item>
+       <item>current</item>
+       <item>wind</item>
+    </string-array>
+
 </resources>

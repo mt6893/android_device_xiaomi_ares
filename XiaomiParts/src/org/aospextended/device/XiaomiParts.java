@@ -18,6 +18,7 @@ package org.aospextended.device;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.os.AsyncTask;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.content.SharedPreferences;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +44,7 @@ import androidx.preference.TwoStatePreference;
 
 import org.aospextended.device.gestures.TouchGestures;
 import org.aospextended.device.gestures.TouchGesturesActivity;
+import org.aospextended.device.util.AppListActivity;
 import org.aospextended.device.doze.DozeSettingsActivity;
 import org.aospextended.device.vibration.VibratorStrengthPreference;
 
@@ -49,15 +52,20 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Date;
+import java.util.Random;
 
 import android.util.Log;
 import android.os.SystemProperties;
+import android.os.Looper;
+import android.os.Handler;
+import android.os.HandlerThread;
 import java.io.*;
 import android.widget.Toast;
 
 import org.aospextended.device.R;
 import org.aospextended.device.util.Utils;
 import org.aospextended.device.triggers.TriggerService;
+import org.aospextended.device.triggers.TriggerUtils;
 
 public class XiaomiParts extends PreferenceFragment implements
         Preference.OnPreferenceChangeListener {
@@ -66,16 +74,26 @@ public class XiaomiParts extends PreferenceFragment implements
 
     public static final String PREF_OTG = "otg";
     public static final String OTG_PATH = "/sys/class/power_supply/usb/otg_switch";
-
-    private Context mContext;
     private SharedPreferences mPrefs;
 
     private Preference mDozePref;
     private Preference mGesturesPref;
     private SwitchPreference mOTG;
+    private SwitchPreference mLedDisco;
     private VibratorStrengthPreference mVibratorStrength;
 
+    private SwitchPreference mLedInGames;
+    private Preference mGame;
+
+    private SwitchPreference mTriggerSound;
+    private ListPreference mTriggerSoundType;
+
     private Preference mTriggers;
+    boolean mStop;
+
+    private Handler mHandler;
+    private HandlerThread mHandlerThread;
+
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -108,6 +126,16 @@ public class XiaomiParts extends PreferenceFragment implements
             }
         });
 
+        mGame = findPreference("game");
+        mGame.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getContext(), AppListActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
         PreferenceCategory misc = (PreferenceCategory) getPreferenceScreen()
                  .findPreference("misc_category");
 
@@ -118,6 +146,25 @@ public class XiaomiParts extends PreferenceFragment implements
         if (!Utils.fileExists(OTG_PATH)) {
             misc.removePreference(mOTG);
         }
+
+        mTriggerSound = (SwitchPreference) findPreference("trigger_sound");
+        mTriggerSound.setChecked(mPrefs.getBoolean("trigger_sound", false));
+        mTriggerSound.setOnPreferenceChangeListener(this);
+
+        mTriggerSoundType  = (ListPreference) findPreference("trigger_sound_type");
+        String type = mPrefs.getString("trigger_sound_type", "classic");
+        mTriggerSoundType.setValue(type == null ? "classic" : type);
+        mTriggerSoundType.setSummary(mTriggerSoundType.getEntry());
+        mTriggerSoundType.setOnPreferenceChangeListener(this);
+
+        mLedDisco = (SwitchPreference) findPreference("led_disco");
+        mLedDisco.setChecked(mPrefs.getBoolean("led_disco", false));
+        mLedDisco.setOnPreferenceChangeListener(this);
+
+        mLedInGames = (SwitchPreference) findPreference("led_in_games");
+        mLedInGames.setChecked(mPrefs.getBoolean("led_in_games", false));
+        mLedInGames.setOnPreferenceChangeListener(this);
+
 
         mTriggers = (Preference) findPreference("triggers");
 //        mTriggers.setOnPreferenceClickListener(this);
@@ -160,6 +207,38 @@ public class XiaomiParts extends PreferenceFragment implements
             return true;
         }
 
+        if (preference == mTriggerSound) {
+            mPrefs.edit()
+                    .putBoolean("trigger_sound", (Boolean) newValue).commit();
+            Settings.System.putInt(getActivity().getContentResolver(), "trigger_sound", ((Boolean) newValue) ? 1 : 0);
+            return true;
+        }
+
+        if (preference == mTriggerSoundType) {
+            String type = (String) newValue;
+            int index = mTriggerSoundType.findIndexOfValue((String) newValue);
+            mPrefs.edit()
+                    .putString("trigger_sound_type", (String) newValue).commit();
+            Settings.System.putString(getActivity().getContentResolver(), "trigger_sound_type", (String) newValue);
+            mTriggerSoundType.setSummary(mTriggerSoundType.getEntries()[index]);
+            return true;
+        }
+
+        if (preference == mLedDisco) {
+            mPrefs.edit()
+                    .putBoolean("led_disco", (Boolean) newValue).commit();
+            LedUtils ledUtils = LedUtils.getInstance(getActivity());
+            ledUtils.play((Boolean) newValue);
+            return true;
+        }
+
+        if (preference == mLedInGames) {
+            mPrefs.edit()
+                    .putBoolean("led_in_games", (Boolean) newValue).commit();
+            LedUtils ledUtils = LedUtils.getInstance(getActivity());
+            ledUtils.play(!(Boolean) newValue || ((Boolean) newValue && mPrefs.getBoolean("led_disco", false)));
+            return true;
+        }
         return true;
     }
 

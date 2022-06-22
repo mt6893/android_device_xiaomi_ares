@@ -172,3 +172,5 @@ persist.sys.mdlog_dumpback=2
 
 #add prop to active UCDetectService and detect usb.
 persist.vendor.radio.usblockant=true
+
+persist.wm.enable_remote_keyguard_animation=0

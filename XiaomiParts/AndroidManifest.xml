@@ -90,8 +90,18 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".util.AppListActivity" 
+            android:label="@string/app_list">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".triggers.TriggerService"
+            android:enabled="true" />
+
+        <service android:name=".util.TaskService"
             android:enabled="true" />
 
     </application>

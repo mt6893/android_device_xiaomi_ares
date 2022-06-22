@@ -30,9 +30,11 @@ import androidx.preference.PreferenceManager;
 import org.aospextended.device.XiaomiParts;
 import org.aospextended.device.gestures.TouchGestures;
 import org.aospextended.device.util.Utils;
+import org.aospextended.device.util.TaskService;
 import org.aospextended.device.doze.DozeUtils;
 import org.aospextended.device.vibration.VibratorStrengthPreference;
 import org.aospextended.device.triggers.TriggerService;
+import org.aospextended.device.triggers.TriggerUtils;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -51,6 +53,9 @@ public class BootReceiver extends BroadcastReceiver {
         DozeUtils.checkDozeService(context);
 //        VibratorStrengthPreference.restore(context);
         TriggerService.onBoot(context);
+//        TriggerUtils tr = TriggerUtils.getInstance(context);
+//        tr.onBoot();
+        context.startService(new Intent(context, TaskService.class));
     }
 
     private void enableComponent(Context context, String component) {

@@ -901,6 +901,9 @@
     <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveBatteryLed">true</bool>
 
+    <!-- Is the Notification LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveNotificationLed">true</bool>
+
     <!-- Does the battery LED support multiple colors?
          Used to decide if the user can change the colors -->
     <bool name="config_multiColorBatteryLed">true</bool>
@@ -917,4 +920,14 @@
     <bool name="config_is_powerbutton_fps" translatable="false">true</bool>
 
     <string name="config_oemFastChargeNodePath">/sys/class/power_supply/usb/fastcharge_mode</string>
+
+    <!-- An array of arrays of side fingerprint sensor properties relative to each display.
+         Note: this value is temporary and is expected to be queried directly
+         from the HAL in the future. -->
+    <array name="config_sfps_sensor_props" translatable="false">
+        <item></item> <!--item>displayId</item-->
+        <item></item> <!--item>sensorLocationX</item-->
+        <item>1065</item> <!--item>sensorLocationY</item-->
+        <item>100</item> <!--item>sensorRadius</item-->
+    </array>
 </resources>

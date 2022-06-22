@@ -63,6 +63,7 @@ import org.aospextended.device.util.Utils;
 import org.aospextended.device.doze.DozeUtils;
 import org.aospextended.device.gestures.TouchGestures;
 import org.aospextended.device.triggers.TriggerService;
+import org.aospextended.device.triggers.TriggerUtils;
 
 public class KeyHandler implements DeviceKeyHandler {
 
@@ -101,6 +102,8 @@ public class KeyHandler implements DeviceKeyHandler {
 
     private final CustomSettingsObserver mCustomSettingsObserver;
 
+    public TriggerUtils tr = null;
+
     public KeyHandler(Context context) {
         mContext = context;
         mEventHandler = new EventHandler();
@@ -110,6 +113,7 @@ public class KeyHandler implements DeviceKeyHandler {
         mAppContext = Utils.getAppContext(mContext);
         mCustomSettingsObserver = new CustomSettingsObserver(new Handler(Looper.getMainLooper()));
         mCustomSettingsObserver.observe();
+        tr = TriggerUtils.getInstance(mAppContext);
     }
 
     private class CustomSettingsObserver extends ContentObserver {
@@ -117,17 +121,32 @@ public class KeyHandler implements DeviceKeyHandler {
             super(handler);
         }
 
+        void update() {
+            onChange(false, Settings.System.getUriFor("trigger_sound"));
+        }
+
         void observe() {
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("triggerleft"),
                     false, this, UserHandle.USER_ALL);
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("triggerright"),
                     false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("trigger_sound"),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
+            if (uri.equals(Settings.System.getUriFor("trigger_sound"))) {
+                if (Settings.System.getInt(mContext.getContentResolver(), "trigger_sound", 0) == 1) {
+                    tr.loadSoundResource();
+                } else {
+                    tr.releaseSoundResource();
+                }
+                return;
+            }
             boolean left = uri.equals(Settings.System.getUriFor("triggerleft"));
             boolean open = Utils.getIntSystem(mContext, left ? "triggerleft" : "triggerright", -1) == 1;
+            tr.triggerAction(left, open);
             long now = SystemClock.uptimeMillis();
             long time = now - mPrevEventTime;
             if (DEBUG) Slog.d(TAG, "new intent: mLeft=" + mLeft + ", mRight=" + mRight + ", left=" + left + ", open=" + open + ", now=" + now + ", time=" + time + ", (mLeft && !left && open)=" + (mLeft && !left && open) + ", (mRight && left && open)=" + (mRight && left && open));
@@ -272,6 +291,7 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     public KeyEvent handleTriggerEvent(KeyEvent event) {
+        if (!Utils.isGameApp(mContext)) return event;
         boolean down = event.getAction() == MotionEvent.ACTION_DOWN;
         Utils.writeValue(event.getKeyCode() == 131 ?
                 "/proc/touchpanel/left_trigger_enable" :

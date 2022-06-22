@@ -165,22 +165,21 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
             X = v.getX() - event.getRawX();
             Y = v.getY() - event.getRawY();
 	} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            float x = event.getRawX();
-            float y = event.getRawY();
 
             v.animate()
                     .x(event.getRawX() + X)
                     .y(event.getRawY() + Y)
                     .setDuration(0)
                     .start();
-
+            float x = v.getX();
+            float y = v.getY();
             boolean left = v.getId() == R.id.image1;
             if (left) {
                 mLX = x;
                 mLY = y;
             } else {
                 mRX = x;
-                mRY = y;
+                mRY = y - v.getHeight();
             }
 
             if (DEBUG) Slog.d(TAG, "action move x,y : " + x + "   " + y  + "  , isleft=" + (v.getId() == R.id.image1));
@@ -267,17 +266,19 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         float LX, LY, RX, RY, BX, BY;
         switch (rotation) {
             case Surface.ROTATION_90:
+                if (DEBUG) Slog.d(TAG, "ROTATION_90");
                 LX = mLY;
-                LY = mLX;
-                RX = mRY;
-                RY = mRX;
+                LY = size.y - mLX - image1.getHeight();
+                RX = mRY + image1.getHeight();
+                RY = size.y - mRX - image1.getHeight();
                 BX = mBY;
-                BY = size.y - mBX - 100;
+                BY = size.y - mBX - button.getHeight();
                 image1.setRotation(0f);
                 image2.setRotation(0f);
                 button.setRotation(0f);
                 break;
             case Surface.ROTATION_180:
+                if (DEBUG) Slog.d(TAG, "ROTATION_180");
                 LX = mLX;
                 LY = size.y - mLY;
                 RX = mRX;
@@ -288,21 +289,23 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
                 image2.setRotation(0f);
                 break;
             case Surface.ROTATION_270:
-                LX = size.x - mLY;
+                if (DEBUG) Slog.d(TAG, "ROTATION_270");
+                LX = size.x - mLY - image1.getHeight();
                 LY = mLX;
-                RX = size.x - mRY;
+                RX = size.x - mRY - 2 * image2.getHeight();
                 RY = mRX;
-                BX = size.x - mBY;
+                BX = size.x - mBY - button.getWidth();
                 BY = mBX;
                 image1.setRotation(180f);
                 image2.setRotation(180f);
                 button.setRotation(180f);
                 break;
             default:
+                if (DEBUG) Slog.d(TAG, "ROTATION_0");
                 LX = mLX;
                 LY = mLY;
                 RX = mRX;
-                RY = mRY;
+                RY = mRY + image1.getHeight();
                 BX = mBX;
                 BY = mBY;
                 image1.setRotation(90f);

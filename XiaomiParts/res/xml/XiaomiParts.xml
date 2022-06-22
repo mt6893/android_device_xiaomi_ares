@@ -35,6 +35,34 @@
             android:key="triggers"
             android:title="Enable triggers view"
             android:summary="You can also enable this view by enabling both triggers within 10 seconds. Long press save button to reset values" />
+
+        <SwitchPreference
+            android:key="trigger_sound"
+            android:summary="Play sound for trigger open/close"
+            android:title="Trigger Sound" />
+
+        <ListPreference
+            android:key="trigger_sound_type"
+            android:title="Trigger Sound Type"
+            android:entries="@array/trigger_sound_type_entries"
+            android:entryValues="@array/trigger_sound_type_values" />
+
+        <Preference
+            android:key="game"
+            android:summary="Add or Remove gaming apps"
+            android:title="Gaming apps" />
+
+        <SwitchPreference
+            android:key="led_disco"
+            android:summary="Enable led light disco"
+            android:title="Led Disco" />
+
+
+        <SwitchPreference android:key="led_in_games"
+            android:summary="Play only in games"
+            android:title="Play in games"
+            android:dependency="led_disco" />
+
     </PreferenceCategory>
 <!--
     <PreferenceCategory

@@ -84,6 +84,12 @@ public class Utils {
         return editor.commit();
     }
 
+    public static boolean isGameApp(Context context) {
+        String appName = getSharedPreferences(context).getString("appName", "");
+        String appList = Settings.System.getString(context.getContentResolver(), "game_app_list");
+        return appList == null || (appList != null && appList.contains(appName));
+    }
+
     /**
      * Write a string value to the specified file.
      * @param filename The filename

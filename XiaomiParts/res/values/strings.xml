@@ -185,5 +185,8 @@
     <string name="double_tap_gesture_title">Double tap to check phone</string>
     <string name="double_tap_gesture_summary">Double tap to show notifications</string>
 
-
+    <string name="search">Search</string>
+    <string name="search_apps">Search apps</string>
+    <string name="application_icon">Application icon</string>
+    <string name="app_list">App List</string>
 </resources>
