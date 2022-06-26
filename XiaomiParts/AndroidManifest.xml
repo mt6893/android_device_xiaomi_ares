@@ -12,7 +12,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-	
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    
     <protected-broadcast android:name="com.android.systemui.doze.pulse" />
 
     <uses-sdk
@@ -103,6 +104,21 @@
 
         <service android:name=".util.TaskService"
             android:enabled="true" />
+
+	<activity android:name=".led.LedOnCall"
+	          android:exported="true">
+            <intent-filter>
+                <action android:name="org.aospextended.device.led.LedOnCall" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".led.LedOnCall"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 
