@@ -66,6 +66,7 @@ import org.aospextended.device.R;
 import org.aospextended.device.util.Utils;
 import org.aospextended.device.triggers.TriggerService;
 import org.aospextended.device.triggers.TriggerUtils;
+import org.aospextended.device.led.LedUtils;
 import org.aospextended.device.led.LedOnCall;
 
 public class XiaomiParts extends PreferenceFragment implements

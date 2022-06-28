@@ -51,7 +51,7 @@ import android.util.Log;
 import android.app.Service;
 import android.content.Intent;
 
-import org.aospextended.device.LedUtils;
+import org.aospextended.device.led.LedUtils;
 
 public class TaskService extends Service {
 

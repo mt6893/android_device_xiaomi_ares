@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.aospextended.device;
+package org.aospextended.device.led;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -82,10 +82,13 @@ public class LedUtils {
     private Context mContext;
     private SharedPreferences mPrefs;
     public static LedUtils sInstance;
-    boolean mStop;
-int r,g,b;
+    private boolean mStop;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
+
+    private static String RED_LED_PATH = "/sys/class/leds/red/brightness";
+    private static String GREEN_LED_PATH = "/sys/class/leds/green/brightness";
+    private static String BLUE_LED_PATH = "/sys/class/leds/blue/brightness";
 
     private Executor mExecutor = new ThreadPoolExecutor(/*corePoolSize=*/3,
             Runtime.getRuntime().availableProcessors(), /*keepAliveTime*/ 60L, TimeUnit.SECONDS,
@@ -123,10 +126,34 @@ int r,g,b;
     }
 
     private void stopDisco() {
-        Utils.writeValue("/sys/class/leds/red/brightness", "0");
-        Utils.writeValue("/sys/class/leds/green/brightness", "0");
-        Utils.writeValue("/sys/class/leds/blue/brightness", "0");
+        Utils.writeValue(RED_LED_PATH, "0");
+        Utils.writeValue(GREEN_LED_PATH, "0");
+        Utils.writeValue(BLUE_LED_PATH, "0");
         mHandler.removeCallbacks(mUpdateInfo);
+    }
+
+    private int rgb_limit(int value) {
+            int x = 35;
+            int y = 1;
+            int _value = value;
+
+            if (y == 1) {
+                _value += x;
+            } else {
+                _value -= x;
+            }
+
+            if (_value >= 255) {
+                _value = 255;
+                y = 0;
+            }
+
+            if (_value < 0) {
+                _value = 0;
+                y = 1;
+            }
+
+            return _value;
     }
 
     private final Runnable mUpdateInfo = new Runnable() {
@@ -135,135 +162,18 @@ int r,g,b;
             long next = now + (1000 - now % 1000);
 
             Random r = new Random();
-            int R = r.nextInt(155) + 50;
-            int G = r.nextInt(155) + 50;
-            int B = r.nextInt(155) + 50;
-//            Utils.writeValue("/sys/class/leds/red/brightness", String.valueOf(R));
-//            Utils.writeValue("/sys/class/leds/green/brightness", String.valueOf(G));
-//            Utils.writeValue("/sys/class/leds/blue/brightness", String.valueOf(B));
-//inc(R,G,B);
-//dec(R,G,B);
+            int R = rgb_limit(r.nextInt(255));
+            int G = rgb_limit(r.nextInt(255));
+            int B = rgb_limit(r.nextInt(255));
 
-            loop();
+            Utils.writeValue(RED_LED_PATH, String.valueOf(R));
+            Utils.writeValue(GREEN_LED_PATH, String.valueOf(G));
+            Utils.writeValue(BLUE_LED_PATH, String.valueOf(B));
+
             if (mHandler != null) {
                 mHandler.postAtTime(mUpdateInfo, next);
             }
         }
     };
-
-    private void loop() {
-/*        setColor(255, 255, 255);
-        unsetColor(255,255,255);
-        setColor(255,0,0);
-unsetColor(255,0,0);
-        setColor(255,255,0);
-unsetColor(255,255,0);
-        setColor(0,255,0);
-unsetColor(0,255,0);
-        setColor(0,255,255);
-unsetColor(0,255,255);
-        setColor(0,0,255);
-unsetColor(0,0,255);*/
-        Thread t1 = new Thread(() ->
-        setColor(255,0,255));
-        t1.start();
-        try {
-        t1.join();
-        } catch (Exception e) {}
-        Thread t2 = new Thread(() ->
-        unsetColor(255,0,255));
-        t2.start();
-        try {
-        t2.join();
-        } catch (Exception e) {}
-    }
-
-
-
-    private void setColor(int red, int green, int blue) {
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i=0;i<=red;i+=10) {
-                    r = i;
-                    _setColor();
-                }
-            }
-        });
-
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i=0;i<=green;i+=10) {
-                    g = i;
-                    _setColor();
-                }
-            }
-        });
-
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i=0;i<=blue;i+=10) {
-                    b = i;
-                    _setColor();
-                }
-            }
-        });
-/*
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-        }*/
-    }
-
-    private void unsetColor(int red, int green, int blue) {
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i=red;i>=0;i-=10) {
-                    r = i;
-                    _setColor();
-                }
-            }
-        });
-
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i=green;i>=0;i-=10) {
-                    g = i;
-                    _setColor();
-                }
-            }
-        });
-
-        mExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i=blue;i>=0;i-=10) {
-                    b = i;
-                    _setColor();
-                }
-            }
-        });
-/*
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-        }
-*/
-    }
-
-    private void _setColor() {
-        Slog.d("sagarled", "r=" + r + ", g=" + g + ", b=" + b);
-        if (mStop) {
-            stopDisco();
-        } else {
-            Utils.writeValue("/sys/class/leds/red/brightness", String.valueOf(r));
-            Utils.writeValue("/sys/class/leds/green/brightness", String.valueOf(g));
-            Utils.writeValue("/sys/class/leds/blue/brightness", String.valueOf(b));
-        }
-    }
 }
 
