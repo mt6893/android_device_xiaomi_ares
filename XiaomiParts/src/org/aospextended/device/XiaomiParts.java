@@ -66,6 +66,7 @@ import org.aospextended.device.R;
 import org.aospextended.device.util.Utils;
 import org.aospextended.device.triggers.TriggerService;
 import org.aospextended.device.triggers.TriggerUtils;
+import org.aospextended.device.triggers.CustomTriggerActivity;
 import org.aospextended.device.led.LedUtils;
 import org.aospextended.device.led.LedOnCall;
 
@@ -91,7 +92,8 @@ public class XiaomiParts extends PreferenceFragment implements
     private ListPreference mTriggerSoundType;
 
     private Preference mTriggers;
-    boolean mStop;
+    private Preference mCustomTrigger;
+    private boolean mStop;
 
     private Handler mHandler;
     private HandlerThread mHandlerThread;
@@ -133,6 +135,16 @@ public class XiaomiParts extends PreferenceFragment implements
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(getContext(), AppListActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+	mCustomTrigger = findPreference("custom_trigger");
+        mCustomTrigger.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getContext(), CustomTriggerActivity.class);
                 startActivity(intent);
                 return true;
             }

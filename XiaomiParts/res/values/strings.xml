@@ -42,7 +42,7 @@
     <string name="gesture_swipe_left_title">Gesture Swipe Left</string>
     <string name="gesture_swipe_right_title">Gesture Swipe Right</string>
     <string name="XiaomiParts">XiaomiParts</string>
-    <string name="XiaomiParts_summary">Gestures and Tweaks</string>
+    <string name="XiaomiParts_summary">Trigger, RGB Led, Gestures and Tweaks</string>
     <string name="screen_off_gestures">Screen-off gestures</string>
     <string name="gestures">Gestures</string>
     <string name="enable_dt2w_title">Enable Double Tap</string>
@@ -189,4 +189,12 @@
     <string name="search_apps">Search apps</string>
     <string name="application_icon">Application icon</string>
     <string name="app_list">App List</string>
+
+    <!-- Custom trigger action strings-->
+    <string name="custom_trigger">Custom Trigger</string>
+    <string name="custom_left_trigger_title">Left trigger</string>
+    <string name="custom_right_trigger_title">Right trigger</string>
+    <string name="custom_trigger_haptic_feedback_title">Haptic feedback</string>
+    <string name="custom_trigger_haptic_feedback_summary">Vibrate when a custom trigger action is detected</string>
+
 </resources>

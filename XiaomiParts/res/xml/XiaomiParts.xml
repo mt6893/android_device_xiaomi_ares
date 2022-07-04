@@ -63,6 +63,11 @@
             android:title="Play in games"
             android:dependency="led_disco" />
 
+	<Preference
+            android:key="custom_trigger"
+            android:summary="Customize trigger buttons for different purposes"
+            android:title="Customize Triggers" />
+
     </PreferenceCategory>
 <!--
     <PreferenceCategory

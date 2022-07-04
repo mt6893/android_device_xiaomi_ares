@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/custom_trigger">
+
+    <com.android.settingslib.widget.MainSwitchPreference
+        android:defaultValue="false"
+        android:key="custom_trigger_enable"
+        android:title="@string/custom_trigger" />
+
+    <Preference
+        android:key="custom_left_trigger"
+        android:title="@string/custom_left_trigger_title"
+        android:persistent="false"
+        android:dependency="custom_trigger_enable" />
+
+    <Preference
+        android:key="custom_right_trigger"
+        android:title="@string/custom_right_trigger_title"
+        android:persistent="false"
+        android:dependency="custom_trigger_enable" />
+
+    <SwitchPreference
+        android:key="custom_trigger_haptic_feedback"
+	android:disableDependentsState="true"
+        android:persistent="false"
+        android:title="@string/custom_trigger_haptic_feedback_title"
+        android:summary="@string/custom_trigger_haptic_feedback_summary" />
+
+</PreferenceScreen>

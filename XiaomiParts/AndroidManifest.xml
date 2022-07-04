@@ -120,6 +120,14 @@
             </intent-filter>
         </receiver>
 
+	<activity
+            android:name=".triggers.CustomTriggerActivity"
+            android:label="@string/custom_trigger">
+          <intent-filter>
+                <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
+          </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
