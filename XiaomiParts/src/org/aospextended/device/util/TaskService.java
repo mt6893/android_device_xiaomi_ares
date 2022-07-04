@@ -50,6 +50,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.app.Service;
 import android.content.Intent;
+import android.provider.Settings;
 
 import org.aospextended.device.led.LedUtils;
 
@@ -110,7 +111,7 @@ public class TaskService extends Service {
 
     public void saveAppName(String appName) {
         if (DEBUG) Log.d(TAG, "appName=" + appName);
-        Utils.getSharedPreferences(this).edit().putString("appName", appName).commit();
+        Settings.System.putString(getContentResolver(), "appName", appName);
         LedUtils ledUtils = LedUtils.getInstance(this);
         ledUtils.play(Utils.isGameApp(this) && Utils.getSharedPreferences(this).getBoolean("led_disco", false));
     }

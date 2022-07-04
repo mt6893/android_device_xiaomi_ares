@@ -66,6 +66,7 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
     float X, Y, mLX, mLY, mRX, mRY;
     float mBX = 100;
     float mBY = 1800;
+    int mHeight;
     public static void onBoot(Context context) {
         SharedPreferences prefs = Utils.getSharedPreferences(context);
         Utils.writeValue("/proc/touchpanel/left_trigger_x", prefs.getString("left_trigger_x", "540"));
@@ -79,6 +80,8 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         mPrefs = Utils.getSharedPreferences(this);
 
         onBoot(this);
+
+        mHeight = getResources().getDimensionPixelSize(R.dimen.image_height);
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getRealSize(p);
@@ -157,6 +160,7 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         image1.setVisibility(View.VISIBLE);
         image2.setVisibility(View.VISIBLE);
 
+        updatePosition(true);
     }
 
     @Override
@@ -220,7 +224,7 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         Utils.writeValue("/proc/touchpanel/right_trigger_x", String.valueOf(mRX));
         Utils.writeValue("/proc/touchpanel/right_trigger_y", String.valueOf(mRY));
 
-        updatePosition();
+        updatePosition(false);
     }
 
 
@@ -252,10 +256,11 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        updatePosition();
+        updatePosition(false);
     }
 
-    private void updatePosition() {
+    private void updatePosition(boolean def) {
+        if (DEBUG) Slog.d(TAG, "updatePosition");
         Display defaultDisplay = windowManager.getDefaultDisplay();
 
         Point size = new Point();
@@ -268,11 +273,11 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
             case Surface.ROTATION_90:
                 if (DEBUG) Slog.d(TAG, "ROTATION_90");
                 LX = mLY;
-                LY = size.y - mLX - image1.getHeight();
-                RX = mRY + image1.getHeight();
-                RY = size.y - mRX - image1.getHeight();
+                LY = size.y - mLX - mHeight;
+                RX = mRY + mHeight;
+                RY = size.y - mRX - mHeight - (def ? mHeight : 0);
                 BX = mBY;
-                BY = size.y - mBX - button.getHeight();
+                BY = size.y - mBX - mHeight - (def ? 2 * mHeight : 0);
                 image1.setRotation(0f);
                 image2.setRotation(0f);
                 button.setRotation(0f);
@@ -290,12 +295,12 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
                 break;
             case Surface.ROTATION_270:
                 if (DEBUG) Slog.d(TAG, "ROTATION_270");
-                LX = size.x - mLY - image1.getHeight();
+                LX = size.x - mLY - mHeight;
                 LY = mLX;
-                RX = size.x - mRY - 2 * image2.getHeight();
-                RY = mRX;
-                BX = size.x - mBY - button.getWidth();
-                BY = mBX;
+                RX = size.x - mRY - 2 * mHeight;
+                RY = mRX - (def ? mHeight : 0);
+                BX = size.x - mBY - button.getWidth() - (def ? mHeight : 0);
+                BY = mBX - (def ? 2 * mHeight : 0);
                 image1.setRotation(180f);
                 image2.setRotation(180f);
                 button.setRotation(180f);

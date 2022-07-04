@@ -15,4 +15,6 @@
 -->
 <resources>
     <color name="icon_bg_color">#FF55b295</color>
+
+    <dimen name="image_height">50dp</dimen>
 </resources>

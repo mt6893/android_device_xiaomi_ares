@@ -85,7 +85,7 @@ public class Utils {
     }
 
     public static boolean isGameApp(Context context) {
-        String appName = getSharedPreferences(context).getString("appName", "");
+        String appName = Settings.System.getString(context.getContentResolver(), "appName");
         String appList = Settings.System.getString(context.getContentResolver(), "game_app_list");
         return appList == null || (appList != null && appList.contains(appName));
     }
