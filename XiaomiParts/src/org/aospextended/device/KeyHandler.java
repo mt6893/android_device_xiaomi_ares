@@ -293,8 +293,10 @@ public class KeyHandler implements DeviceKeyHandler {
     public KeyEvent handleTriggerEvent(KeyEvent event) {
         if (!Utils.isGameApp(mContext)) {
             if (DEBUG) Slog.d(TAG, "not a game app");
+            tr.onEvent(event);
             return event;
         }
+
         boolean down = event.getAction() == MotionEvent.ACTION_DOWN;
         Utils.writeValue(event.getKeyCode() == 131 ?
                 "/proc/touchpanel/left_trigger_enable" :

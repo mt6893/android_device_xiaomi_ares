@@ -9,23 +9,41 @@
         android:key="custom_trigger_enable"
         android:title="@string/custom_trigger" />
 
+    <PreferenceCategory
+        android:title="Triggers">
+
     <Preference
-        android:key="custom_left_trigger"
-        android:title="@string/custom_left_trigger_title"
+        android:key="custom_left_trigger_double_click"
+        android:title="@string/custom_left_trigger_double_click_title"
         android:persistent="false"
         android:dependency="custom_trigger_enable" />
 
     <Preference
-        android:key="custom_right_trigger"
-        android:title="@string/custom_right_trigger_title"
+        android:key="custom_right_trigger_double_click"
+        android:title="@string/custom_right_trigger_double_click_title"
         android:persistent="false"
         android:dependency="custom_trigger_enable" />
 
+    <Preference
+        android:key="custom_left_trigger_longpress"
+        android:title="@string/custom_left_trigger_longpress_title"
+        android:persistent="false"
+        android:dependency="custom_trigger_enable" />
+
+    <Preference
+        android:key="custom_right_trigger_longpress"
+        android:title="@string/custom_right_trigger_longpress_title"
+        android:persistent="false"
+        android:dependency="custom_trigger_enable" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Haptic feedback">
     <SwitchPreference
         android:key="custom_trigger_haptic_feedback"
 	android:disableDependentsState="true"
         android:persistent="false"
         android:title="@string/custom_trigger_haptic_feedback_title"
         android:summary="@string/custom_trigger_haptic_feedback_summary" />
-
+    </PreferenceCategory>
 </PreferenceScreen>

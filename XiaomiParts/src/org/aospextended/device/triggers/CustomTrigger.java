@@ -12,11 +12,14 @@ import android.content.res.Resources;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Slog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.KeyEvent;
 import android.widget.Switch;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.Preference.OnPreferenceChangeListener;
@@ -45,8 +48,10 @@ public class CustomTrigger extends PreferenceFragment implements
     private static final String SETTINGS_METADATA_NAME = "com.android.settings";
 
     public static final String PREF_CUSTOM_TRIGGER_ENABLE = "custom_trigger_enable";
-    public static final String PREF_LEFT_TRIGGER = "custom_left_trigger";
-    public static final String PREF_RIGHT_TRIGGER = "custom_right_trigger";
+    public static final String PREF_LEFT_TRIGGER_DOUBLE_CLICK = "custom_left_trigger_double_click";
+    public static final String PREF_RIGHT_TRIGGER_DOUBLE_CLICK = "custom_right_trigger_double_click";
+    public static final String PREF_LEFT_TRIGGER_LONGPRESS = "custom_left_trigger_longpress";
+    public static final String PREF_RIGHT_TRIGGER_LONGPRESS = "custom_right_trigger_longpress";
     public static final String KEY_TRIGGER_HAPTIC_FEEDBACK = "custom_trigger_haptic_feedback";
 
     private static final int DLG_SHOW_ACTION_DIALOG  = 0;
@@ -56,13 +61,11 @@ public class CustomTrigger extends PreferenceFragment implements
 
     private MainSwitchPreference mEnableCustomTrigger;
 
-    private Preference mLeftTrigger;
-    private Preference mRightTrigger;
+    private Preference mLeftTriggerDoubleClick, mRightTriggerDoubleClick, mLeftTriggerLongpress, mRightTriggerLongpress;
 
     private SwitchPreference mHapticFeedback;
 
     private boolean mCheckPreferences;
-    private SharedPreferences mPrefs;
 
     private ShortcutPickerHelper mPicker;
     private String mPendingkey;
@@ -70,12 +73,14 @@ public class CustomTrigger extends PreferenceFragment implements
     private String[] mActionEntries;
     private String[] mActionValues;
 
+    private TriggerUtils mTriggerUtils;
+    long mPrevEventTime;
+    int mKeycode, mEventAction;
+
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
 
         mPicker = new ShortcutPickerHelper(getActivity(), this);
-
-        mPrefs = Utils.getSharedPreferences(getActivity());
 
         mActionValues = getResources().getStringArray(R.array.action_screen_off_values);
         mActionEntries = getResources().getStringArray(R.array.action_screen_off_entries);
@@ -95,26 +100,31 @@ public class CustomTrigger extends PreferenceFragment implements
 
         prefs = getPreferenceScreen();
 
-	boolean enableCustomTrigger = mPrefs.getBoolean(PREF_CUSTOM_TRIGGER_ENABLE, true);
+	boolean enableCustomTrigger = Utils.getIntSystem(getActivity(), PREF_CUSTOM_TRIGGER_ENABLE, 1) == 1;
 
 	mEnableCustomTrigger = (MainSwitchPreference) findPreference(PREF_CUSTOM_TRIGGER_ENABLE);
         mEnableCustomTrigger.addOnSwitchChangeListener(this);
         mEnableCustomTrigger.setChecked(enableCustomTrigger);
 
-	mLeftTrigger = (Preference) prefs.findPreference(PREF_LEFT_TRIGGER);
-	mRightTrigger = (Preference) prefs.findPreference(PREF_RIGHT_TRIGGER);
+	mLeftTriggerDoubleClick = (Preference) prefs.findPreference(PREF_LEFT_TRIGGER_DOUBLE_CLICK);
+	mRightTriggerDoubleClick = (Preference) prefs.findPreference(PREF_RIGHT_TRIGGER_DOUBLE_CLICK);
+        mLeftTriggerLongpress = (Preference) prefs.findPreference(PREF_LEFT_TRIGGER_LONGPRESS);
+        mRightTriggerLongpress = (Preference) prefs.findPreference(PREF_RIGHT_TRIGGER_LONGPRESS);
 
         PreferenceCategory haptic = (PreferenceCategory) prefs.findPreference("haptic");
         mHapticFeedback = (SwitchPreference) findPreference(KEY_TRIGGER_HAPTIC_FEEDBACK);
 	mHapticFeedback.setEnabled(enableCustomTrigger);
-        mHapticFeedback.setChecked(mPrefs.getInt(Utils.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0);
+        mHapticFeedback.setChecked(Utils.getIntSystem(getActivity(), KEY_TRIGGER_HAPTIC_FEEDBACK, 1) != 0);
         mHapticFeedback.setOnPreferenceChangeListener(this);
 
-	setPref(mLeftTrigger, mPrefs.getString(PREF_LEFT_TRIGGER,
-                Action.ACTION_WAKE_DEVICE));
-	setPref(mRightTrigger, mPrefs.getString(PREF_RIGHT_TRIGGER,
-		Action.ACTION_WAKE_DEVICE));
-
+	setPref(mLeftTriggerDoubleClick, Utils.getStringSystem(getActivity(), PREF_LEFT_TRIGGER_DOUBLE_CLICK,
+                Action.ACTION_NULL));
+	setPref(mRightTriggerDoubleClick, Utils.getStringSystem(getActivity(), PREF_RIGHT_TRIGGER_DOUBLE_CLICK,
+		Action.ACTION_NULL));
+        setPref(mLeftTriggerLongpress, Utils.getStringSystem(getActivity(), PREF_LEFT_TRIGGER_LONGPRESS,
+                Action.ACTION_NULL));
+        setPref(mRightTriggerLongpress, Utils.getStringSystem(getActivity(), PREF_RIGHT_TRIGGER_LONGPRESS,
+                Action.ACTION_NULL));
         return prefs;
     }
 
@@ -144,12 +154,18 @@ public class CustomTrigger extends PreferenceFragment implements
     public boolean onPreferenceClick(Preference preference) {
         String key = null;
         int title = 0;
-	if (preference == mLeftTrigger) {
-            key = PREF_LEFT_TRIGGER;
-            title = R.string.custom_left_trigger_title;
-        } else if (preference == mRightTrigger) {
-            key = PREF_RIGHT_TRIGGER;
-            title = R.string.custom_right_trigger_title;
+	if (preference == mLeftTriggerDoubleClick) {
+            key = PREF_LEFT_TRIGGER_DOUBLE_CLICK;
+            title = R.string.custom_left_trigger_double_click_title;
+        } else if (preference == mRightTriggerDoubleClick) {
+            key = PREF_RIGHT_TRIGGER_DOUBLE_CLICK;
+            title = R.string.custom_right_trigger_double_click_title;
+        } else if (preference == mLeftTriggerLongpress) {
+            key = PREF_LEFT_TRIGGER_LONGPRESS;
+            title = R.string.custom_left_trigger_longpress_title;
+        } else if (preference == mRightTriggerLongpress) {
+            key = PREF_RIGHT_TRIGGER_LONGPRESS;
+            title = R.string.custom_right_trigger_longpress_title;
         }
 	if (key != null) {
             showDialogInner(DLG_SHOW_ACTION_DIALOG, key, title);
@@ -163,7 +179,7 @@ public class CustomTrigger extends PreferenceFragment implements
         final String key = preference.getKey();
         if (KEY_TRIGGER_HAPTIC_FEEDBACK.equals(key)) {
                 final boolean value = (boolean) newValue;
-                mPrefs.edit().putInt(Utils.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, value ? 1 : 0).commit();
+                Utils.putIntSystem(getActivity(), KEY_TRIGGER_HAPTIC_FEEDBACK, value ? 1 : 0);
                 return true;
         }
         return false;
@@ -172,53 +188,23 @@ public class CustomTrigger extends PreferenceFragment implements
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
         mEnableCustomTrigger.setChecked(isChecked);
+        Utils.putIntSystem(getActivity(), PREF_CUSTOM_TRIGGER_ENABLE, isChecked ? 1 : 0);
     }
-
-/*  TODO:
-    * Implement an method to detect doubleclick from trigger buttons.
-    * Then Assign the given task to action.
-    * Guard this functionality while game in use.
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-	switch (keyCode){
-	case 131:
-		// Assigning temp action for test
-		action = mPrefs.getString(PREF_LEFT_TRIGGER,
-				Action.ACTION_TORCH);
-            break;
-
-        case 132:
-		// Assigning temp action for test
-		action = mPrefs.getString(PREF_RIGHT_TRIGGER,
-				Action.ACTION_VIB_SILENT);
-	    break;
-	}
-
-	if (action == null || action.equals(Action.ACTION_NULL)) return false;
-
-	if (action.equals(Action.ACTION_CAMERA)) {
-		Action.processAction(mContext, Action.ACTION_WAKE_DEVICE, false);
-	}
-	Action.processAction(mContext, action, false);
-
-	return true;
-    } */
 
     // Reset all entries to default.
     private void resetToDefault() {
-        SharedPreferences.Editor editor = mPrefs.edit();
 
-        mPrefs.edit()
-                .putBoolean(PREF_CUSTOM_TRIGGER_ENABLE, true).commit();
+        Utils.putIntSystem(getActivity(), PREF_CUSTOM_TRIGGER_ENABLE, 1);
 
-	editor.putString(PREF_LEFT_TRIGGER,
-                Action.ACTION_NULL).commit();
-	editor.putString(PREF_RIGHT_TRIGGER,
-                Action.ACTION_NULL).commit();
-
+	Utils.putStringSystem(getActivity(), PREF_LEFT_TRIGGER_DOUBLE_CLICK,
+                Action.ACTION_NULL);
+        Utils.putStringSystem(getActivity(), PREF_RIGHT_TRIGGER_DOUBLE_CLICK,
+                Action.ACTION_NULL);
+        Utils.putStringSystem(getActivity(), PREF_LEFT_TRIGGER_LONGPRESS,
+                Action.ACTION_NULL);
+        Utils.putStringSystem(getActivity(), PREF_RIGHT_TRIGGER_LONGPRESS,
+                Action.ACTION_NULL);
 	mHapticFeedback.setChecked(true);
-        editor.commit();
 	initPrefs();
     }
 
@@ -233,7 +219,7 @@ public class CustomTrigger extends PreferenceFragment implements
         if (mPendingkey == null || action == null) {
             return;
         }
-        mPrefs.edit().putString(mPendingkey, action).commit();
+        Utils.putStringSystem(getActivity(), mPendingkey, action);
         initPrefs();
         mPendingkey = null;
     }
@@ -313,9 +299,8 @@ public class CustomTrigger extends PreferenceFragment implements
                                     getOwner().mPicker.pickShortcut(getOwner().getId());
                                 }
                             } else {
-                                getOwner().mPrefs.edit()
-                                        .putString(key,
-                                        getOwner().mActionValues[item]).commit();
+                                    Utils.putStringSystem(getOwner().getActivity(), key,
+                                        getOwner().mActionValues[item]);
                                 getOwner().initPrefs();
                             }
                         }

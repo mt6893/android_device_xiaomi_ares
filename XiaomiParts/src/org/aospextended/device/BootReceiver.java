@@ -47,8 +47,6 @@ public class BootReceiver extends BroadcastReceiver {
                 TouchGestures.PREF_GESTURE_ENABLE, true));
             TouchGestures.enableDt2w(prefs.getBoolean(
                 TouchGestures.PREF_DT2W_ENABLE, true));
-            XiaomiParts.enableOTG(prefs.getBoolean(
-                XiaomiParts.PREF_OTG, false));
         }
         DozeUtils.checkDozeService(context);
 //        VibratorStrengthPreference.restore(context);

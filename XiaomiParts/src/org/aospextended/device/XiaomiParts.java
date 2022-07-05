@@ -75,13 +75,10 @@ public class XiaomiParts extends PreferenceFragment implements
     private static final boolean DEBUG = Utils.DEBUG;
     private static final String TAG = "XiaomiParts";
 
-    public static final String PREF_OTG = "otg";
-    public static final String OTG_PATH = "/sys/class/power_supply/usb/otg_switch";
     private SharedPreferences mPrefs;
 
     private Preference mDozePref;
     private Preference mGesturesPref;
-    private SwitchPreference mOTG;
     private SwitchPreference mLedDisco;
     private VibratorStrengthPreference mVibratorStrength;
 
@@ -151,15 +148,7 @@ public class XiaomiParts extends PreferenceFragment implements
         });
 
         PreferenceCategory misc = (PreferenceCategory) getPreferenceScreen()
-                 .findPreference("misc_category");
-
-        mOTG = (SwitchPreference) findPreference(PREF_OTG);
-        mOTG.setChecked(mPrefs.getBoolean(PREF_OTG, false));
-        mOTG.setOnPreferenceChangeListener(this);
-
-        if (!Utils.fileExists(OTG_PATH)) {
-            misc.removePreference(mOTG);
-        }
+                 .findPreference("triggers_category");
 
         mTriggerSound = (SwitchPreference) findPreference("trigger_sound");
         mTriggerSound.setChecked(mPrefs.getBoolean("trigger_sound", false));
@@ -214,13 +203,6 @@ public class XiaomiParts extends PreferenceFragment implements
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         final String key = preference.getKey();
-        if (preference == mOTG) {
-            mPrefs.edit()
-                    .putBoolean(PREF_OTG, (Boolean) newValue).commit();
-            enableOTG((Boolean) newValue);
-            return true;
-        }
-
         if (preference == mTriggerSound) {
             mPrefs.edit()
                     .putBoolean("trigger_sound", (Boolean) newValue).commit();
@@ -254,11 +236,5 @@ public class XiaomiParts extends PreferenceFragment implements
             return true;
         }
         return true;
-    }
-
-    public static void enableOTG(boolean enable) {
-            if (Utils.fileExists(OTG_PATH)) {
-                Utils.writeLine(OTG_PATH, enable ? "1" : "0");
-            }
     }
 }

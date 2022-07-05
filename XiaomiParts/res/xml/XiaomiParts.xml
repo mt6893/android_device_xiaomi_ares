@@ -23,13 +23,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="misc_category"
-        android:title="Misc">
-
-        <SwitchPreference
-            android:key="otg"
-            android:summary="@string/otg_summary"
-            android:title="@string/otg_title" />
+        android:key="triggers_category"
+        android:title="Triggers">
 
         <Preference
             android:key="triggers"
@@ -52,6 +47,17 @@
             android:summary="Add or Remove gaming apps"
             android:title="Gaming apps" />
 
+         <Preference
+            android:key="custom_trigger"
+            android:summary="Customize trigger buttons for different purposes, only works in non-gaming apps"
+            android:title="custom_trigger" />
+
+     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="leds_category"
+        android:title="Leds">
+
         <SwitchPreference
             android:key="led_disco"
             android:summary="Enable led light disco"
@@ -62,11 +68,6 @@
             android:summary="Play only in games"
             android:title="Play in games"
             android:dependency="led_disco" />
-
-	<Preference
-            android:key="custom_trigger"
-            android:summary="Customize trigger buttons for different purposes"
-            android:title="Customize Triggers" />
 
     </PreferenceCategory>
 <!--

@@ -50,7 +50,8 @@ public class Utils {
     private static final String SETTINGS_METADATA_NAME = "com.android.settings";
 
     public static SharedPreferences getSharedPreferences(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(getAppContext(context));
+        return getAppContext(context).getSharedPreferences("org.aospextended.device_preferences",
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
     }
 
     public static Context getAppContext(Context context) {
@@ -61,6 +62,19 @@ public class Utils {
         }
         return context;
     }
+
+
+    public static boolean putStringSystem(Context context, String name, String value) {
+        boolean ret = Settings.System.putString(context.getContentResolver(), name, value);
+        return ret;
+    }
+
+
+    public static String getStringSystem(Context context, String name, String def) {
+        String ret = Settings.System.getString(context.getContentResolver(), name);
+        return ret == null ? def : ret;
+    }
+
 
     public static int getIntSystem(Context context, String name, int def) {
         int ret = Settings.System.getInt(context.getContentResolver(), name, def);
@@ -87,7 +101,9 @@ public class Utils {
     public static boolean isGameApp(Context context) {
         String appName = Settings.System.getString(context.getContentResolver(), "appName");
         String appList = Settings.System.getString(context.getContentResolver(), "game_app_list");
-        return appList == null || (appList != null && appList.contains(appName));
+        boolean isGameApp = appList == null || (appList != null && appList.contains(appName));
+        if (DEBUG) Slog.d(TAG, "appName: " + appName + " appList: " + appList + " isGameApp: " + isGameApp);
+        return isGameApp;
     }
 
     /**

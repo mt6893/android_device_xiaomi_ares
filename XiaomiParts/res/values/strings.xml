@@ -191,9 +191,11 @@
     <string name="app_list">App List</string>
 
     <!-- Custom trigger action strings-->
-    <string name="custom_trigger">Custom Trigger</string>
-    <string name="custom_left_trigger_title">Left trigger</string>
-    <string name="custom_right_trigger_title">Right trigger</string>
+    <string name="custom_trigger">Trigger Actions</string>
+    <string name="custom_left_trigger_double_click_title">Left trigger double click</string>
+    <string name="custom_right_trigger_double_click_title">Right trigger double click</string>
+    <string name="custom_left_trigger_longpress_title">Left trigger longpress</string>
+    <string name="custom_right_trigger_longpress_title">Right trigger longpress</string>
     <string name="custom_trigger_haptic_feedback_title">Haptic feedback</string>
     <string name="custom_trigger_haptic_feedback_summary">Vibrate when a custom trigger action is detected</string>
 
