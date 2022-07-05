@@ -101,7 +101,7 @@ public class Utils {
     public static boolean isGameApp(Context context) {
         String appName = Settings.System.getString(context.getContentResolver(), "appName");
         String appList = Settings.System.getString(context.getContentResolver(), "game_app_list");
-        boolean isGameApp = appList == null || (appList != null && appList.contains(appName));
+        boolean isGameApp = appList != null && appList.contains(appName);
         if (DEBUG) Slog.d(TAG, "appName: " + appName + " appList: " + appList + " isGameApp: " + isGameApp);
         return isGameApp;
     }

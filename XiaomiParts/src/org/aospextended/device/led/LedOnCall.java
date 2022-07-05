@@ -15,20 +15,18 @@ public class LedOnCall extends BroadcastReceiver {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
             if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-                enableLed(true);
+                enableLed(context, true);
             } else if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-                enableLed(true);
+                enableLed(context, true);
             } else if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
-                enableLed(false);
+                enableLed(context, false);
             }
         }
     }
 
-    private static String LED_PATH = "/sys/class/leds/blue/brightness";
-
-    public static void enableLed(boolean enable) {
-        if (Utils.fileExists(LED_PATH)) {
-            Utils.writeLine(LED_PATH, enable ? "255" : "0");
-        }
+    public static void enableLed(Context context, boolean enable) {
+        enable = enable && Utils.getIntSystem(context, "led_in_calls", 1) == 1;
+        LedUtils ledUtils = LedUtils.getInstance(context);
+        ledUtils.play(enable, enable);
     }
 }

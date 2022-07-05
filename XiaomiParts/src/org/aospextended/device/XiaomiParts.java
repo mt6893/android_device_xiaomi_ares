@@ -84,6 +84,7 @@ public class XiaomiParts extends PreferenceFragment implements
 
     private SwitchPreference mLedInGames;
     private Preference mGame;
+    private SwitchPreference mLedInCalls;
 
     private SwitchPreference mTriggerSound;
     private ListPreference mTriggerSoundType;
@@ -168,6 +169,9 @@ public class XiaomiParts extends PreferenceFragment implements
         mLedInGames.setChecked(mPrefs.getBoolean("led_in_games", false));
         mLedInGames.setOnPreferenceChangeListener(this);
 
+        mLedInCalls = (SwitchPreference) findPreference("led_in_calls");
+        mLedInCalls.setChecked(Utils.getIntSystem(getActivity(), "led_in_calls", 1) == 1);
+        mLedInCalls.setOnPreferenceChangeListener(this);
 
         mTriggers = (Preference) findPreference("triggers");
 //        mTriggers.setOnPreferenceClickListener(this);
@@ -233,6 +237,11 @@ public class XiaomiParts extends PreferenceFragment implements
                     .putBoolean("led_in_games", (Boolean) newValue).commit();
             LedUtils ledUtils = LedUtils.getInstance(getActivity());
             ledUtils.play(!(Boolean) newValue || ((Boolean) newValue && mPrefs.getBoolean("led_disco", false)));
+            return true;
+        }
+
+        if (preference == mLedInCalls) {
+            Utils.putIntSystem(getActivity(), "led_in_calls", ((Boolean) newValue) ? 1 : 0);
             return true;
         }
         return true;

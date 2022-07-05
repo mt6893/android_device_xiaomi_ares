@@ -50,7 +50,7 @@
          <Preference
             android:key="custom_trigger"
             android:summary="Customize trigger buttons for different purposes, only works in non-gaming apps"
-            android:title="custom_trigger" />
+            android:title="@string/custom_trigger" />
 
      </PreferenceCategory>
 
@@ -68,6 +68,10 @@
             android:summary="Play only in games"
             android:title="Play in games"
             android:dependency="led_disco" />
+
+        <SwitchPreference android:key="led_in_calls"
+            android:summary="Ply led light effect during calls"
+            android:title="Play during calls" />
 
     </PreferenceCategory>
 <!--

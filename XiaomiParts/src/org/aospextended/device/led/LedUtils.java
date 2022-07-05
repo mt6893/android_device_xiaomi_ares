@@ -112,15 +112,18 @@ public class LedUtils {
     }
 
     public void play(boolean play) {
-        stopDisco();
-        mStop = !play;
-        AsyncTask.execute(() -> disco(play));
+        play(play, false);
     }
 
-    private void disco(boolean play) {
+    public void play(boolean play, boolean force) {
+        stopDisco();
+        mStop = !play;
+        AsyncTask.execute(() -> disco(play, force));
+    }
+
+    private void disco(boolean play, boolean force) {
         boolean playInGames = mPrefs.getBoolean("led_in_games", false);
-        if (playInGames && !Utils.isGameApp(mContext)) return;
-        if (play) {
+        if ((play && !(playInGames && !Utils.isGameApp(mContext))) || force) {
             mUpdateInfo.run();
         }
     }
