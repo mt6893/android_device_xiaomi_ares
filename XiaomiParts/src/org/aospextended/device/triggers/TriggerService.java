@@ -21,8 +21,10 @@ import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_M
 import android.annotation.NonNull;
 import android.app.KeyguardManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.SharedPreferences;
@@ -50,7 +52,7 @@ import androidx.annotation.Nullable;
 import org.aospextended.device.R;
 import org.aospextended.device.util.Utils;
 
-public class TriggerService extends Service implements View.OnTouchListener, View.OnClickListener {
+public class TriggerService implements View.OnTouchListener, View.OnClickListener {
     private static final boolean DEBUG = Utils.DEBUG;
     private static final String TAG = "TriggerService";
 
@@ -59,14 +61,29 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
     private View mView;
     private ImageView image1, image2;
     private WindowManager windowManager;
-    private Button button;
+    private ImageView button;
     Point p = new Point();
     WindowManager.LayoutParams layoutParams;
 
-    float X, Y, mLX, mLY, mRX, mRY;
-    float mBX = 100;
-    float mBY = 1800;
-    int mHeight;
+    float X, Y, mLX, mLY, mRX, mRY, lx, ly, rx, ry, bx, by;
+    float mBX = 200;
+    float mBY = 2000;
+    int mHeight, mRotation;
+
+    private Context mContext;
+    private static TriggerService mInstance;
+
+    private boolean mShowing;
+
+    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_CONFIGURATION_CHANGED)) {
+                updatePosition(false);
+            }
+        }
+    };
+
     public static void onBoot(Context context) {
         SharedPreferences prefs = Utils.getSharedPreferences(context);
         Utils.writeValue("/proc/touchpanel/left_trigger_x", prefs.getString("left_trigger_x", "540"));
@@ -75,18 +92,33 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         Utils.writeValue("/proc/touchpanel/right_trigger_y", prefs.getString("right_trigger_y", "1700"));
     }
 
-    @Override
-    public void onCreate() {
-        mPrefs = Utils.getSharedPreferences(this);
+    public static TriggerService getInstance(Context context) {
+        if (mInstance == null) {
+            Slog.d(TAG, "NEW INSTANCE");
+            mInstance = new TriggerService(context);
+        }
+        return mInstance;
+    }
 
-        onBoot(this);
+    private TriggerService(Context context) {
+        mContext = context;
+    }
 
-        mHeight = getResources().getDimensionPixelSize(R.dimen.image_height);
+    public void init(Context context) {
+        mPrefs = Utils.getSharedPreferences(context);
 
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        onBoot(context);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
+        mContext.registerReceiver(mIntentReceiver, filter);
+
+        mHeight = context.getResources().getDimensionPixelSize(R.dimen.image_height);
+
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getRealSize(p);
 
-        mView = LayoutInflater.from(this).inflate(R.layout.view, null);
+        mView = LayoutInflater.from(context).inflate(R.layout.view, null);
         image1 = mView.findViewById(R.id.image1);
         image2 = mView.findViewById(R.id.image2);
 
@@ -114,21 +146,19 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         if (DEBUG) Slog.d(TAG, "lxlyrxry " + mLX + " " + mLY + " " + mRX + " " + mRY);
 
         button = mView.findViewById(R.id.button);
-/*
-        LayoutParams params = (LayoutParams) button.getLayoutParams();
-        params.leftMargin = 10;
-        params.topMargin = p.y - 500;
-        button.setLayoutParams(params);
-*/
+
         button.setOnClickListener(this);
         button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(TriggerService.this, "Resetted values", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Resetted values", Toast.LENGTH_LONG).show();
                 reset();
                 return true;
             }
         });
+
+        mBX = 200;
+        mBY = 2000;
 
         button.animate()
                 .x(mBX)
@@ -140,6 +170,8 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
     }
 
     public void show() {
+        if (mShowing) return;
+        init(mContext);
         if (DEBUG) Slog.d(TAG, "show");
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -155,7 +187,7 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
             windowManager.addView(mView, layoutParams);
         } catch (RuntimeException e) {
         }
-
+        mShowing = true;
         mView.setVisibility(View.VISIBLE);
         image1.setVisibility(View.VISIBLE);
         image2.setVisibility(View.VISIBLE);
@@ -175,15 +207,15 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
                     .y(event.getRawY() + Y)
                     .setDuration(0)
                     .start();
-            float x = v.getX();
-            float y = v.getY();
+            float x = v.getX() + mHeight / 2;
+            float y = v.getY() + mHeight / 2;
             boolean left = v.getId() == R.id.image1;
             if (left) {
                 mLX = x;
                 mLY = y;
             } else {
                 mRX = x;
-                mRY = y - v.getHeight();
+                mRY = y;
             }
 
             if (DEBUG) Slog.d(TAG, "action move x,y : " + x + "   " + y  + "  , isleft=" + (v.getId() == R.id.image1));
@@ -194,16 +226,17 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
     @Override
     public void onClick(View v) {
         if (DEBUG) Slog.d(TAG, "wrote values");
+        updatePosition(false, false);
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString("left_trigger_x", String.valueOf(mLX));
-        editor.putString("left_trigger_y", String.valueOf(mLY));
-        editor.putString("right_trigger_x", String.valueOf(mRX));
-        editor.putString("right_trigger_y", String.valueOf(mRY));
+        editor.putString("left_trigger_x", String.valueOf(lx));
+        editor.putString("left_trigger_y", String.valueOf(ly));
+        editor.putString("right_trigger_x", String.valueOf(rx));
+        editor.putString("right_trigger_y", String.valueOf(ry));
         editor.commit();
-	Utils.writeValue("/proc/touchpanel/left_trigger_x", String.valueOf(mLX));
-        Utils.writeValue("/proc/touchpanel/left_trigger_y", String.valueOf(mLY));
-        Utils.writeValue("/proc/touchpanel/right_trigger_x", String.valueOf(mRX));
-        Utils.writeValue("/proc/touchpanel/right_trigger_y", String.valueOf(mRY));
+	Utils.writeValue("/proc/touchpanel/left_trigger_x", String.valueOf(lx));
+        Utils.writeValue("/proc/touchpanel/left_trigger_y", String.valueOf(ly));
+        Utils.writeValue("/proc/touchpanel/right_trigger_x", String.valueOf(rx));
+        Utils.writeValue("/proc/touchpanel/right_trigger_y", String.valueOf(ry));
         hide();
     }
 
@@ -213,6 +246,8 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
         mLY = 700;
         mRX = 540;
         mRY = 1700;
+        mBX = 200;
+        mBY = 2000;
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putString("left_trigger_x", String.valueOf(mLX));
         editor.putString("left_trigger_y", String.valueOf(mLY));
@@ -229,112 +264,135 @@ public class TriggerService extends Service implements View.OnTouchListener, Vie
 
 
     public void hide() {
+        if (!mShowing) return;
+        mShowing = false;
         if (DEBUG) Slog.d(TAG, "hide");
         windowManager.removeView(mView);
-        stopSelf();
-    }
-
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (DEBUG) Slog.d(TAG, "Starting service");
-        show();
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        if (DEBUG) Slog.d(TAG, "Destroying service");
-        //hide();
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        updatePosition(false);
+        mContext.unregisterReceiver(mIntentReceiver);
     }
 
     private void updatePosition(boolean def) {
+        updatePosition(def, true);
+    }
+
+    private void updatePosition(boolean def, boolean update) {
         if (DEBUG) Slog.d(TAG, "updatePosition");
         Display defaultDisplay = windowManager.getDefaultDisplay();
 
         Point size = new Point();
         defaultDisplay.getRealSize(size);
 
-        int rotation = defaultDisplay.getRotation();
+        int rot = defaultDisplay.getRotation();
+        int lastRotation = 0;
+        if (def) mRotation = lastRotation;
         int x, y;
-        float LX, LY, RX, RY, BX, BY;
+        float LX = mLX;
+        float LY = mLY;
+        float RX = mRX;
+        float RY = mRY;
+        float BX = mBX;
+        float BY = mBY;
+        int rotation = rot;
+        if (!update) rotation = 0;
         switch (rotation) {
             case Surface.ROTATION_90:
                 if (DEBUG) Slog.d(TAG, "ROTATION_90");
-                LX = mLY;
-                LY = size.y - mLX - mHeight;
-                RX = mRY + mHeight;
-                RY = size.y - mRX - mHeight - (def ? mHeight : 0);
-                BX = mBY;
-                BY = size.y - mBX - mHeight - (def ? 2 * mHeight : 0);
+                if (mRotation == Surface.ROTATION_270) {
+                    LX = size.x - mLX;
+                    LY = size.y - mLY;
+                    RX = size.x - mRX;
+                    RY = size.y - mRY;
+                    BX = size.x - mBX;
+                    BY = size.y - mBY;
+                } else {
+                    LX = mLY;
+                    LY = size.y - mLX;
+                    RX = mRY;
+                    RY = size.y - mRX;
+                    BX = mBY;
+                    BY = size.y - mBX;
+                }
                 image1.setRotation(0f);
                 image2.setRotation(0f);
                 button.setRotation(0f);
                 break;
-            case Surface.ROTATION_180:
-                if (DEBUG) Slog.d(TAG, "ROTATION_180");
-                LX = mLX;
-                LY = size.y - mLY;
-                RX = mRX;
-                RY = size.y - mRY;
-                BX = mBX;
-                BY = size.y - mBY;
-                image1.setRotation(0f);
-                image2.setRotation(0f);
-                break;
             case Surface.ROTATION_270:
                 if (DEBUG) Slog.d(TAG, "ROTATION_270");
-                LX = size.x - mLY - mHeight;
-                LY = mLX;
-                RX = size.x - mRY - 2 * mHeight;
-                RY = mRX - (def ? mHeight : 0);
-                BX = size.x - mBY - button.getWidth() - (def ? mHeight : 0);
-                BY = mBX - (def ? 2 * mHeight : 0);
+                if (mRotation == Surface.ROTATION_90) {
+                    LX = size.x - mLX;
+                    LY = size.y - mLY;
+                    RX = size.x - mRX;
+                    RY = size.y - mRY;
+                    BX = size.x - mBX;
+                    BY = size.y - mBY;
+               } else {
+                    LX = size.x - mLY;
+                    LY = mLX;
+                    RX = size.x - mRY;
+                    RY = mRX;
+                    BX = size.x - mBY;
+                    BY = mBX;
+                }
                 image1.setRotation(180f);
                 image2.setRotation(180f);
                 button.setRotation(180f);
                 break;
             default:
                 if (DEBUG) Slog.d(TAG, "ROTATION_0");
-                LX = mLX;
-                LY = mLY;
-                RX = mRX;
-                RY = mRY + image1.getHeight();
-                BX = mBX;
-                BY = mBY;
+                if (mRotation == Surface.ROTATION_90) {
+                    LX = (!update ? 1080 : size.x) - mLY;
+                    LY = mLX;
+                    RX = (!update ? 1080 : size.x) - mRY;
+                    RY = mRX;
+                    BX = (!update ? 1080 : size.x) - mBY;
+                    BY = mBX;
+                } else if (mRotation == Surface.ROTATION_270) {
+                    LX = mLY;
+                    LY = (!update ? 2400 : size.y) - mLX;
+                    RX = mRY;
+                    RY = (!update ? 2400 : size.y) - mRX;
+                    BX = mBY;
+                    BY = (!update ? 2400 : size.y) - mBX;
+                }
                 image1.setRotation(90f);
                 image2.setRotation(90f);
                 button.setRotation(90f);
         }
 
-        image1.animate()
-                .x(LX)
-                .y(LY)
-                .setDuration(0)
-                .start();
+        if (update) {
+            image1.animate()
+                    .x(LX - mHeight / 2)
+                    .y(LY - mHeight / 2)
+                    .setDuration(0)
+                    .start();
 
-        image2.animate()
-                .x(RX)
-                .y(RY)
-                .setDuration(0)
-                .start();
+            image2.animate()
+                    .x(RX - mHeight / 2)
+                    .y(RY - mHeight / 2 - (def ? mHeight : 0))
+                    .setDuration(0)
+                    .start();
 
-        button.animate()
-                .x(BX)
-                .y(BY)
-                .setDuration(0)
-                .start();
+            button.animate()
+                    .x(BX - mHeight / 2)
+                    .y(BY - mHeight / 2 - (def ? 2 * mHeight : 0))
+                    .setDuration(0)
+                    .start();
 
+            mRotation = rotation;
+
+            mLX = LX;
+            mLY = LY;
+            mRX = RX;
+            mRY = RY;
+            mBX = BX;
+            mBY = BY;
+        }
+
+        lx = LX;
+        ly = LY;
+        rx = RX;
+        ry = RY;
+        bx = BX;
+        by = BY;
     }
 }

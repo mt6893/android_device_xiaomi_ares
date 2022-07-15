@@ -97,12 +97,13 @@ public class KeyHandler implements DeviceKeyHandler {
     private int mTriggerAction;
 
     long mPrevEventTime;
-    boolean mLeft;
-    boolean mRight;
+    boolean mLeftOpen, mLeftClosed;
+    boolean mRightOpen, mRightClosed;
 
     private final CustomSettingsObserver mCustomSettingsObserver;
 
     public TriggerUtils tr = null;
+    public TriggerService triggerService;
 
     public KeyHandler(Context context) {
         mContext = context;
@@ -114,6 +115,7 @@ public class KeyHandler implements DeviceKeyHandler {
         mCustomSettingsObserver = new CustomSettingsObserver(new Handler(Looper.getMainLooper()));
         mCustomSettingsObserver.observe();
         tr = TriggerUtils.getInstance(mAppContext);
+        triggerService = TriggerService.getInstance(mAppContext);
     }
 
     private class CustomSettingsObserver extends ContentObserver {
@@ -149,14 +151,18 @@ public class KeyHandler implements DeviceKeyHandler {
             tr.triggerAction(left, open);
             long now = SystemClock.uptimeMillis();
             long time = now - mPrevEventTime;
-            if (DEBUG) Slog.d(TAG, "new intent: mLeft=" + mLeft + ", mRight=" + mRight + ", left=" + left + ", open=" + open + ", now=" + now + ", time=" + time + ", (mLeft && !left && open)=" + (mLeft && !left && open) + ", (mRight && left && open)=" + (mRight && left && open));
-            if (time < 10000 && ((mLeft && !left && open) || (mRight && left && open))) {
+            if (time < 3000 && ((mLeftOpen && !left && open) || (mRightOpen && left && open))) {
                 if (DEBUG) Slog.d(TAG, "starting service");
-                mAppContext.startService(new Intent(mAppContext, TriggerService.class));
+                triggerService.show();
+            } else if (time < 3000 && ((mLeftClosed && !left && !open) || (mRightClosed && left && !open))) {
+                if (DEBUG) Slog.d(TAG, "stopping service");
+                triggerService.hide();
             }
             mPrevEventTime = now;
-            mLeft = left && open;
-            mRight = !left && open;
+            mLeftOpen = left && open;
+            mRightOpen = !left && open;
+            mLeftClosed = left && !open;
+            mRightClosed = !left && !open;
         }
 
     }

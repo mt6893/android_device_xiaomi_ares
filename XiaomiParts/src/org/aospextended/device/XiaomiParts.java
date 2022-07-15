@@ -187,7 +187,7 @@ public class XiaomiParts extends PreferenceFragment implements
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference == mTriggers) {
-            getActivity().startService(new Intent(getActivity(), TriggerService.class));
+            TriggerService.getInstance(getActivity()).show();
             return true;
         }
         return super.onPreferenceTreeClick(preference);
