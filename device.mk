@@ -346,3 +346,7 @@ PRODUCT_PACKAGES += \
 # XiaomiParts
 PRODUCT_PACKAGES += \
     XiaomiParts
+
+# MtkInCallService
+PRODUCT_PACKAGES += \
+    MtkInCallService
